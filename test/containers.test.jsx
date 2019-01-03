@@ -9,7 +9,7 @@ import {
 
 class Button extends Component {
   render () {
-    return <button {...this.props}>this.props.children</button>
+    return <button {...this.props}>{this.props.children}</button>
   }
 }
 
