@@ -1,5 +1,5 @@
 import { DATE_FORMATS } from './constants';
-import { formatDate } from './formattingUtils';
+import { formatDate } from './formatting';
 
 export function insertIf (condition: boolean, element: any): any[] {
   return condition ? [element] : [];

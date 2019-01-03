@@ -3,7 +3,7 @@
 import { Component } from 'react';
 import * as util from '../src';
 
-describe('FormattingUtils', () => {
+describe('formatting', () => {
   it('Correctly splits a name', () => {
     expect(util.splitName('John Smith')).toEqual(['John', 'Smith']);
     expect(util.splitName('John Smith Sr.')).toEqual(['John', 'Smith Sr.']);

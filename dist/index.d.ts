@@ -1,3 +1,3 @@
 export * from './constants';
-export * from './formattingUtils';
+export * from './formatting';
 export * from './utils';

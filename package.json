@@ -34,7 +34,8 @@
   "keywords": [
     "javascript",
     "typescript",
-    "utils"
+    "utils",
+    "formatting"
   ],
   "author": "Mighty",
   "license": "MIT",
@@ -64,8 +65,8 @@
     "index.js"
   ],
   "peerDependencies": {
-    "lodash": "4.17",
-    "react": "16.7"
+    "lodash": "4",
+    "react": "16"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
@@ -76,13 +77,10 @@
     "@babel/plugin-proposal-decorators": "^7.2.3",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
-    "@babel/polyfill": "^7.2.3",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.1.0",
     "@mighty-justice/tslint-config": "^0.3.0",
-    "@types/classnames": "^2.2.6",
-    "@types/flat": "^0.0.28",
     "@types/lodash": "^4.14.119",
     "@types/numeral": "^0.0.25",
     "@types/react": "16.7.18",
