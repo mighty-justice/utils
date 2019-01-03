@@ -18,7 +18,7 @@ describe('FormattingUtils', () => {
     expect(util.splitName('                 ')).toEqual(['', '']);
     expect(util.splitName(undefined)).toEqual(['', '']);
     expect(util.splitName(null)).toEqual(['', '']);
-  });5558675309')).toBe
+  });
 
   it('Correctly splits a comma separated list', () => {
     expect(util.splitCommaList('John, Smith')).toEqual(['John', 'Smith']);
