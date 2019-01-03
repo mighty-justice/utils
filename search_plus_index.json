@@ -1,0 +1,1 @@
+{"./":{"url":"./","title":"Introduction","keywords":"","body":"Mighty Utils Installation dependencies ``` #### npm `npm install --save-dev @mighty-justice/utils` #### yarn `yarn add --dev @mighty-justice/utils` ### Usage ```ts import { formatPhoneNumber } from @mighty-justice/utils'; console.log(formatPhoneNumber('5558675309')) // => (555) 867-5309 "}}
