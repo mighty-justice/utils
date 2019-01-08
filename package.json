@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run build:clean && npm run build:js",
+    "build": "npm run build:clean && npm run build:types && npm run build:js",
     "build:clean": "rm -r dist/* || true",
     "build:js": "rollup -c",
     "build:types": "yarn tsc --emitDeclarationOnly",
