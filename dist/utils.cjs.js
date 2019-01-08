@@ -307,8 +307,7 @@ function mapBooleanToText(bool) {
 
   if (lodash.isBoolean(bool)) {
     return bool ? 'Yes' : 'No';
-  } // tslint:disable-next-line strict-type-predicates
-
+  }
 
   if (mapUndefinedToNo && bool === undefined) {
     return 'No';
