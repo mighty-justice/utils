@@ -1,6 +1,6 @@
 {
   "name": "@mighty-justice/utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Standardization of small utilities across Mighty",
   "main": "dist/utils.cjs.js",
   "module": "dist/utils.esm.js",
@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run build:clean && npm run build:js",
+    "build": "npm run build:clean && npm run build:types && npm run build:js",
     "build:clean": "rm -r dist/* || true",
     "build:js": "rollup -c",
     "build:types": "yarn tsc --emitDeclarationOnly",
