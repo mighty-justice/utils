@@ -10,7 +10,7 @@ export interface IDisabledContainerProps {
   className?: any;
 }
 
- export interface IGuardedContainerProps  {
+export interface IGuardedContainerProps {
   disabledComponent: React.ComponentClass;
   enabledComponent: React.ComponentClass;
   isGuarded: boolean;
