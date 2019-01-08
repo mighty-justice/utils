@@ -57,7 +57,7 @@ export function formatPhoneNumber (input?: string) {
   return EMPTY_FIELD;
 }
 
-export function formatDate (value?: string, dateFormat = DATE_FORMATS.date) {
+export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.date) {
   return value
     ? format(value, dateFormat)
     : EMPTY_FIELD;
@@ -128,12 +128,11 @@ export function formatDelimitedList (list?: string[], delimiter = ', ') {
   return EMPTY_FIELD;
 }
 
-export function mapBooleanToText (bool?: boolean, {mapUndefinedToNo} = {mapUndefinedToNo: false}) {
+export function mapBooleanToText (bool?: boolean | null, {mapUndefinedToNo} = {mapUndefinedToNo: false}) {
   if (isBoolean(bool)) {
     return bool ? 'Yes' : 'No';
   }
 
-  // tslint:disable-next-line strict-type-predicates
   if (mapUndefinedToNo && bool === undefined) {
     return 'No';
   }

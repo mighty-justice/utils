@@ -1,10 +1,10 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
+import babelrc from 'babelrc-rollup';
 import json from 'rollup-plugin-json';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
-import babelrc from 'babelrc-rollup';
 import pkg from './package.json';
 
 const name = 'utils'
