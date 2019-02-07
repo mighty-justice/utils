@@ -8,3 +8,7 @@ export function insertIf (condition: boolean, element: any): any[] {
 export function dateToday () {
   return formatDate((new Date()).toISOString(), DATE_FORMATS.date_value);
 }
+
+export function getExtension (fileName?: string) {
+  return fileName && fileName.split('?')[0].split('#')[0].split('.').pop();
+}
