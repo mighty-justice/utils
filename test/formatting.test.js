@@ -215,4 +215,19 @@ describe('formatting', () => {
     expect(parsedCaseNote[3].type).toBe('br');
     expect(parsedCaseNote[4]).toBe('hello');
   });
+
+  it('Correctly formats a website', () => {
+    const website = 'https://www.mighty.com'
+      , innerText = 'innerText';
+
+    expect(util.formatWebsite(undefined)).toBe('--');
+
+    const formattedWebsite = util.formatWebsite(website)
+    expect(formattedWebsite.props.href).toBe(website);
+    expect(formattedWebsite.props.children).toBe(website);
+
+    const formattedWebsiteWithText = util.formatWebsite(website, innerText);
+    expect(formattedWebsiteWithText.props.href).toBe(website);
+    expect(formattedWebsiteWithText.props.children).toBe(innerText);
+  });
 });
