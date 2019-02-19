@@ -167,6 +167,16 @@ export function formatDuration (iso8601?: string) {
   return unitCountsHuman.map(([unit, count]) => `${count} ${unit}`).join(', ');
 }
 
+export function formatWebsite (website: string | undefined, text?: string): (string | JSX.Element) {
+  if (!website) {
+    return EMPTY_FIELD;
+  }
+
+  return (
+    <a href={website} rel='noopener noreferrer' target='_blank'>{text || website}</a>
+  );
+}
+
 export function stripNonAlpha (str?: string | null) {
   if (str === undefined || str === null) {
     return '';
