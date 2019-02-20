@@ -6,6 +6,7 @@ import parser from 'html-react-parser';
 
 import {
   escape,
+  get,
   has,
   isBoolean,
   map,
@@ -44,7 +45,7 @@ export function formatFullName (firstName?: string, lastName?: string) {
   return `${firstName || ''} ${lastName || ''}`.trim();
 }
 
-export function formatPhoneNumber (input?: string) {
+export function formatPhoneNumber (input?: string | null) {
   // check phone number not already formatted
   const phoneNumber = input && input.match(/\d/g);
 
@@ -63,13 +64,13 @@ export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.dat
     : EMPTY_FIELD;
 }
 
-export function getNameOrDefault (obj?: { [key: string]: any }, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
+export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
   if (obj) {
     if (has(obj, 'first_name')) {
       return (`${result(obj, 'first_name', '')} ${result(obj, 'last_name', '')}`).trim();
     }
     if (has(obj, field)) {
-      return obj[field];
+      return get(obj, field);
     }
   }
   return defaultValue;
@@ -85,7 +86,7 @@ export function getOrDefault (obj?: any) {
   return obj || EMPTY_FIELD;
 }
 
-export function formatSocialSecurityNumber (input?: string) {
+export function formatSocialSecurityNumber (input?: null | string) {
   // check ssn not already formatted
   const socialSecurityNumber = input && input.match(/\d/g);
 
@@ -97,31 +98,31 @@ export function formatSocialSecurityNumber (input?: string) {
   return EMPTY_FIELD;
 }
 
-export function formatPercentage (value: number | string, decimalPoints = 2) {
+export function formatPercentage (value: null | number | string, decimalPoints = 2) {
   const zeros = times(decimalPoints, () => '0').join('')
     , formattingString = `0.${zeros}%`;
   return (value || value === 0) ? numeral(value).format(formattingString) : EMPTY_FIELD;
 }
 
-export function formatMoney (value?: number | string) {
+export function formatMoney (value?: null | number | string) {
   return (value || value === 0)
     ? numeral(value).format('$0,0.00')
     : EMPTY_FIELD;
 }
 
-export function formatParagraphs (field?: string) {
+export function formatParagraphs (field?: null | string) {
   return field
     ? field.split(/\r?\n/).map((s, i) => <p key={i}>{s}</p>)
     : EMPTY_FIELD;
 }
 
-export function formatCommaSeparatedNumber (value?: number | string) {
+export function formatCommaSeparatedNumber (value?: null | number | string) {
   return (value || value === 0)
     ? numeral(value).format('0,0')
     : EMPTY_FIELD;
 }
 
-export function formatDelimitedList (list?: string[], delimiter = ', ') {
+export function formatDelimitedList (list?: null | string[], delimiter = ', ') {
   if (list) {
     return getOrDefault(list.join(delimiter));
   }
@@ -140,11 +141,11 @@ export function mapBooleanToText (bool?: boolean | null, {mapUndefinedToNo} = {m
   return EMPTY_FIELD;
 }
 
-export function formatMoneyInput (value?: number | string) {
+export function formatMoneyInput (value?: null | number | string) {
   return value && numeral(value).value();
 }
 
-export function formatDuration (iso8601?: string) {
+export function formatDuration (iso8601?: null | string) {
   if (!iso8601) {
     return EMPTY_FIELD;
   }
@@ -189,7 +190,7 @@ export function pluralize (baseWord: string, pluralSuffix: string, count: number
   return count === 1 ? baseWord : `${baseWord}${pluralSuffix}`;
 }
 
-export function getType (fullType?: string) {
+export function getType (fullType?: null | string) {
   const type = fullType && fullType.split('.')[1];
   return type || fullType;
 }
