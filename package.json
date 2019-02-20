@@ -58,7 +58,9 @@
       "ts",
       "tsx"
     ],
-    "setupTestFrameworkScriptFile": "./test/setup.js",
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ],
     "testURL": "http://localhost/"
   },
   "files": [
@@ -96,15 +98,15 @@
     "@types/react": "16.8.4",
     "babelrc-rollup": "^3.0.0",
     "coveralls": "^3.0.2",
-    "enzyme": "^3.8.0",
-    "enzyme-adapter-react-16": "^1.7.1",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.9.1",
     "gh-pages": "^2.0.1",
     "gitbook-cli": "^2.3.2",
     "gitbook-plugin-anchorjs": "^2.1.0",
     "gitbook-plugin-search-plus": "^1.0.4-alpha-3",
     "iso8601-duration": "^1.1.6",
-    "jest": "^23.6.0",
-    "jest-environment-jsdom": "^23.4.0",
+    "jest": "^24.1.0",
+    "jest-environment-jsdom": "^24.0.0",
     "lodash": "4.17.11",
     "np": "^3.1.0",
     "numeral": "^2.0.6",
@@ -122,6 +124,8 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
+    "@types/enzyme": "^3.1.18",
+    "@types/jest": "^24.0.6",
     "classnames": "^2.2.6",
     "date-fns": "^1.30.1",
     "html-react-parser": "0.6.0",
