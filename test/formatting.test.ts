@@ -1,6 +1,4 @@
 /* global describe, it, expect */
-/* eslint-disable no-magic-numbers */
-import { Component } from 'react';
 import * as util from '../src';
 
 describe('formatting', () => {
@@ -214,5 +212,20 @@ describe('formatting', () => {
     expect(parsedCaseNote[2].type).toBe('br');
     expect(parsedCaseNote[3].type).toBe('br');
     expect(parsedCaseNote[4]).toBe('hello');
+  });
+
+  it('Correctly formats a website', () => {
+    const website = 'https://www.mighty.com'
+      , innerText = 'innerText';
+
+    expect(util.formatWebsite(undefined)).toBe('--');
+
+    const formattedWebsite = util.formatWebsite(website) as JSX.Element;
+    expect(formattedWebsite.props.href).toBe(website);
+    expect(formattedWebsite.props.children).toBe(website);
+
+    const formattedWebsiteWithText = util.formatWebsite(website, innerText) as JSX.Element;
+    expect(formattedWebsiteWithText.props.href).toBe(website);
+    expect(formattedWebsiteWithText.props.children).toBe(innerText);
   });
 });
