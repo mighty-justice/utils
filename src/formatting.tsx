@@ -205,16 +205,6 @@ export function parseAndPreserveNewlines (body?: string) {
   return parser(preserveNewLines(escapedBody));
 }
 
-export function getPercentValue (value?: string) {
-  if (!value) { return value; }
-  return String(Number(value) / 100);
-}
-
-export function getPercentDisplay (value?: string) {
-  if (!value) { return value; }
-  return Number(value) * 100;
-}
-
 export function getDisplayName (component: any): (string | undefined) {
   if (!component) {
     return undefined;
