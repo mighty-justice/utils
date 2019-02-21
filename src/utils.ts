@@ -13,12 +13,10 @@ export function dateToday () {
 
 export function getPercentValue (value?: null | string): string {
   if (typeof value === 'undefined' || value === null || value === '') { return ''; }
-  const decimal = new Decimal(value).div(CENT_DECIMAL);
-  return decimal.toString();
+  return new Decimal(value).div(CENT_DECIMAL).toString();
 }
 
 export function getPercentDisplay (value?: null | string): string {
   if (typeof value === 'undefined' || value === null || value === '') { return ''; }
-  const decimal = new Decimal(value).times(CENT_DECIMAL);
-  return decimal.toString();
+  return new Decimal(value).times(CENT_DECIMAL).toString();
 }
