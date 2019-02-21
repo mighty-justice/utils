@@ -1,6 +1,4 @@
 /* global describe, it, expect */
-/* eslint-disable no-magic-numbers */
-import { Component } from 'react';
 import * as util from '../src';
 
 describe('formatting', () => {
@@ -222,11 +220,11 @@ describe('formatting', () => {
 
     expect(util.formatWebsite(undefined)).toBe('--');
 
-    const formattedWebsite = util.formatWebsite(website)
+    const formattedWebsite = util.formatWebsite(website) as JSX.Element;
     expect(formattedWebsite.props.href).toBe(website);
     expect(formattedWebsite.props.children).toBe(website);
 
-    const formattedWebsiteWithText = util.formatWebsite(website, innerText);
+    const formattedWebsiteWithText = util.formatWebsite(website, innerText) as JSX.Element;
     expect(formattedWebsiteWithText.props.href).toBe(website);
     expect(formattedWebsiteWithText.props.children).toBe(innerText);
   });
