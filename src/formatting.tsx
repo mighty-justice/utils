@@ -46,16 +46,33 @@ export function formatFullName (firstName?: string, lastName?: string) {
 }
 
 export function formatPhoneNumber (input?: string | null) {
-  // check phone number not already formatted
-  const phoneNumber = input && input.match(/\d/g);
+  if (input === undefined || input === null || input === '') { return EMPTY_FIELD }
 
-  if (phoneNumber) {
-    const unformattedNumber = phoneNumber.join('');
+  const phoneNumbers = input.match(/\d/g) || []
+    , phoneNotNumbers = input.match(/[^0-9\-\(\)]/g) || []
+    , PHONE_FORMATS: { [key: number]: string } = {
+      12: '+## (###) ###-####',
+      11: '+# (###) ###-####',
+      10: '(###) ###-####',
+      7: '###-####',
+    };
 
-    // tslint:disable-next-line no-magic-numbers
-    return `(${unformattedNumber.slice(0, 3)}) ${unformattedNumber.slice(3, 6)}-${unformattedNumber.slice(6, 10)}`;
+  if (phoneNotNumbers.length) {
+    return input;
   }
-  return EMPTY_FIELD;
+
+  if (phoneNumbers.length in PHONE_FORMATS) {
+    const phoneNumbersReverse = phoneNumbers.reverse()
+      , format = PHONE_FORMATS[phoneNumbers.length]
+
+    return format
+      .split('')
+      .map(char => (char === '#') ? phoneNumbersReverse.pop() : char)
+      .join('')
+      ;
+  }
+
+  return input;
 }
 
 export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.date) {

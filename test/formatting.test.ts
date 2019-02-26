@@ -44,11 +44,17 @@ describe('formatting', () => {
   it('Correctly formats a phone number', () => {
     expect(util.formatPhoneNumber(null)).toBe('--');
     expect(util.formatPhoneNumber(undefined)).toBe('--');
-    expect(util.formatPhoneNumber('asdf')).toBe('--');
+    expect(util.formatPhoneNumber('5')).toBe('5');
+    expect(util.formatPhoneNumber('8675309')).toBe('867-5309');
     expect(util.formatPhoneNumber('5558675309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('(555)-867-5309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('(555)-8675309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('555-867-5309')).toBe('(555) 867-5309');
+    expect(util.formatPhoneNumber('867-5309')).toBe('867-5309');
+    expect(util.formatPhoneNumber('867-5309 ext. 4')).toBe('867-5309 ext. 4');
+    expect(util.formatPhoneNumber('Call main office')).toBe('Call main office');
+    expect(util.formatPhoneNumber('+2111 (555)-867-5309')).toBe('+2111 (555)-867-5309');
+    expect(util.formatPhoneNumber('125558675309')).toBe('+12 (555) 867-5309');
   });
 
   it('Correctly formats a name when passed an object', () => {
