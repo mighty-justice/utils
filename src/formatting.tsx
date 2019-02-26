@@ -179,7 +179,7 @@ export function mapBooleanToText (bool?: boolean | null, {mapUndefinedToNo} = {m
 
 export function formatMoneyInput (value?: null | number | string) {
   if (!hasStringOrNumberContent(value)) { return value; }
-  return value && numeral(value).value();
+  return numeral(value).value();
 }
 
 export function formatDuration (iso8601?: null | string) {
