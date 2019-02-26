@@ -44,11 +44,17 @@ describe('formatting', () => {
   it('Correctly formats a phone number', () => {
     expect(util.formatPhoneNumber(null)).toBe('--');
     expect(util.formatPhoneNumber(undefined)).toBe('--');
-    expect(util.formatPhoneNumber('asdf')).toBe('--');
+    expect(util.formatPhoneNumber('5')).toBe('5');
+    expect(util.formatPhoneNumber('8675309')).toBe('867-5309');
     expect(util.formatPhoneNumber('5558675309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('(555)-867-5309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('(555)-8675309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('555-867-5309')).toBe('(555) 867-5309');
+    expect(util.formatPhoneNumber('867-5309')).toBe('867-5309');
+    expect(util.formatPhoneNumber('867-5309 ext. 4')).toBe('867-5309 ext. 4');
+    expect(util.formatPhoneNumber('Call main office')).toBe('Call main office');
+    expect(util.formatPhoneNumber('+2111 (555)-867-5309')).toBe('+2111 (555)-867-5309');
+    expect(util.formatPhoneNumber('125558675309')).toBe('+12 (555) 867-5309');
   });
 
   it('Correctly formats a name when passed an object', () => {
@@ -75,13 +81,13 @@ describe('formatting', () => {
     expect(util.getOrDefault('Hello')).toBe('Hello');
     expect(util.getOrDefault('Hello                     ')).toBe('Hello');
     expect(util.getOrDefault(123)).toBe(123);
+    expect(util.getOrDefault(0)).toBe(0);
   });
 
-  it('Correctly displays default value when a falsy value passed', () => {
+  it('Correctly displays default value when an empty value is passed', () => {
     expect(util.getOrDefault(null)).toBe('--');
     expect(util.getOrDefault(undefined)).toBe('--');
     expect(util.getOrDefault('')).toBe('--');
-    expect(util.getOrDefault(0)).toBe('--');
     expect(util.getOrDefault(' ')).toBe('--');
     expect(util.getOrDefault('                              ')).toBe('--');
   });
@@ -135,6 +141,7 @@ describe('formatting', () => {
     expect(util.formatMoneyInput('1,222.00')).toBe(1222);
     expect(util.formatMoneyInput(null)).toBe(null);
     expect(util.formatMoneyInput(undefined)).toBe(undefined);
+    expect(util.formatMoneyInput('')).toBe('');
     expect(util.formatMoneyInput('123')).toBe(123);
     expect(util.formatMoneyInput('5,757.57')).toBe(5757.57);
     expect(util.formatMoneyInput('123,456,789.99')).toBe(123456789.99);

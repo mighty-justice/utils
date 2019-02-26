@@ -6,7 +6,7 @@ import { parse } from 'iso8601-duration';
 import { format } from 'date-fns';
 import numeral from 'numeral';
 import parser from 'html-react-parser';
-import { has, result, get, times, isBoolean, escape, startCase, sortBy, map, reject } from 'lodash';
+import { isString, isNumber, has, result, get, times, isBoolean, escape, startCase, sortBy, map, reject } from 'lodash';
 
 /*
  *
@@ -4969,8 +4969,27 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
+function canReplaceSymbols(template, chars) {
+  return template.split('#').length - 1 === chars.length;
+}
+function replaceSymbolsWithChars(template, chars) {
+  var charsReverse = chars.reverse();
+  return template.split('').map(function (char) {
+    return char === '#' ? charsReverse.pop() : char;
+  }).join('');
+}
+function hasStringContent(value) {
+  if (!isString(value)) {
+    return false;
+  }
+
+  return !!value.replace(/ /g, '').length;
+}
+function hasStringOrNumberContent(value) {
+  return hasStringContent(value) || isNumber(value);
+}
 function splitName(name) {
-  if (name === undefined || name === null) {
+  if (!hasStringContent(name)) {
     return ['', ''];
   }
 
@@ -4982,10 +5001,9 @@ function splitName(name) {
   return [firstName, lastName.join(' ').trim()];
 }
 function splitCommaList(str) {
-  if (str === undefined || str === null || str.trim() === '') {
+  if (!hasStringContent(str)) {
     return [];
-  } // tslint:disable-next-line no-magic-numbers
-
+  }
 
   if (str.indexOf(',') === -1) {
     return [str.trim()];
@@ -5001,20 +5019,36 @@ function formatFullName(firstName, lastName) {
   return "".concat(firstName || '', " ").concat(lastName || '').trim();
 }
 function formatPhoneNumber(input) {
-  // check phone number not already formatted
-  var phoneNumber = input && input.match(/\d/g);
-
-  if (phoneNumber) {
-    var unformattedNumber = phoneNumber.join(''); // tslint:disable-next-line no-magic-numbers
-
-    return "(".concat(unformattedNumber.slice(0, 3), ") ").concat(unformattedNumber.slice(3, 6), "-").concat(unformattedNumber.slice(6, 10));
+  if (!hasStringContent(input)) {
+    return EMPTY_FIELD;
   }
 
-  return EMPTY_FIELD;
+  var phoneNumbers = input.match(/\d/g) || [],
+      phoneNotNumbers = input.match(/[^0-9\-()]/g) || [],
+      PHONE_FORMATS = ['###-####', '(###) ###-####', '+# (###) ###-####', '+## (###) ###-####'];
+
+  if (phoneNotNumbers.length) {
+    return input;
+  }
+
+  for (var _i = 0; _i < PHONE_FORMATS.length; _i++) {
+    var template = PHONE_FORMATS[_i];
+
+    if (canReplaceSymbols(template, phoneNumbers)) {
+      return replaceSymbolsWithChars(template, phoneNumbers);
+    }
+  }
+
+  return input;
 }
 function formatDate(value) {
   var dateFormat = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_FORMATS.date;
-  return value ? format(value, dateFormat) : EMPTY_FIELD;
+
+  if (!hasStringContent(value)) {
+    return EMPTY_FIELD;
+  }
+
+  return format(value, dateFormat);
 }
 function getNameOrDefault(obj) {
   var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
@@ -5035,55 +5069,81 @@ function getNameOrDefault(obj) {
 
   return defaultValue;
 }
-function getOrDefault(obj) {
-  try {
-    return obj.trim() || EMPTY_FIELD;
-  } catch (err) {// do nothing
+function getOrDefault(value) {
+  var isUndefined = value === undefined,
+      isNull = value === null,
+      isEmptyString = isString(value) && !hasStringContent(value);
+
+  if (isUndefined || isNull || isEmptyString) {
+    return EMPTY_FIELD;
   }
 
-  return obj || EMPTY_FIELD;
+  if (isString(value)) {
+    return value.trim();
+  }
+
+  return value;
 }
-function formatSocialSecurityNumber(input) {
-  // check ssn not already formatted
-  var socialSecurityNumber = input && input.match(/\d/g);
+function formatSocialSecurityNumber(value) {
+  if (!hasStringContent(value)) {
+    return EMPTY_FIELD;
+  }
 
-  if (socialSecurityNumber) {
-    var unformattedSSN = socialSecurityNumber.join(''); // tslint:disable-next-line no-magic-numbers
+  var ssnNums = value && value.match(/\d/g) || [],
+      template = '###-##-####';
 
-    return "".concat(unformattedSSN.slice(0, 3), "-").concat(unformattedSSN.slice(3, 5), "-").concat(unformattedSSN.slice(5, 9));
+  if (canReplaceSymbols(template, ssnNums)) {
+    return replaceSymbolsWithChars(template, ssnNums);
   }
 
   return EMPTY_FIELD;
 }
 function formatPercentage(value) {
   var decimalPoints = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+
+  if (!hasStringOrNumberContent(value)) {
+    return EMPTY_FIELD;
+  }
+
   var zeros = times(decimalPoints, function () {
     return '0';
   }).join(''),
       formattingString = "0.".concat(zeros, "%");
-  return value || value === 0 ? numeral(value).format(formattingString) : EMPTY_FIELD;
+  return numeral(value).format(formattingString);
 }
 function formatMoney(value) {
-  return value || value === 0 ? numeral(value).format('$0,0.00') : EMPTY_FIELD;
+  if (!hasStringOrNumberContent(value)) {
+    return EMPTY_FIELD;
+  }
+
+  return numeral(value).format('$0,0.00');
 }
-function formatParagraphs(field) {
-  return field ? field.split(/\r?\n/).map(function (s, i) {
+function formatParagraphs(value) {
+  if (!hasStringContent(value)) {
+    return EMPTY_FIELD;
+  }
+
+  return value.split(/\r?\n/).map(function (s, i) {
     return React.createElement("p", {
       key: i
     }, s);
-  }) : EMPTY_FIELD;
+  });
 }
 function formatCommaSeparatedNumber(value) {
-  return value || value === 0 ? numeral(value).format('0,0') : EMPTY_FIELD;
+  if (!hasStringOrNumberContent(value)) {
+    return EMPTY_FIELD;
+  }
+
+  return numeral(value).format('0,0');
 }
 function formatDelimitedList(list) {
   var delimiter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ', ';
 
-  if (list) {
-    return getOrDefault(list.join(delimiter));
+  if (!list) {
+    return EMPTY_FIELD;
   }
 
-  return EMPTY_FIELD;
+  return getOrDefault(list.join(delimiter));
 }
 function mapBooleanToText(bool) {
   var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
@@ -5102,10 +5162,14 @@ function mapBooleanToText(bool) {
   return EMPTY_FIELD;
 }
 function formatMoneyInput(value) {
-  return value && numeral(value).value();
+  if (!hasStringOrNumberContent(value)) {
+    return value;
+  }
+
+  return numeral(value).value();
 }
 function formatDuration(iso8601) {
-  if (!iso8601) {
+  if (!hasStringContent(iso8601)) {
     return EMPTY_FIELD;
   } // Translate object to KV Pair
 
@@ -5140,7 +5204,7 @@ function formatDuration(iso8601) {
   }).join(', ');
 }
 function formatWebsite(website, text) {
-  if (!website) {
+  if (!hasStringContent(website)) {
     return EMPTY_FIELD;
   }
 
@@ -5151,7 +5215,7 @@ function formatWebsite(website, text) {
   }, text || website);
 }
 function stripNonAlpha(str) {
-  if (str === undefined || str === null) {
+  if (!hasStringContent(str)) {
     return '';
   }
 
@@ -5168,12 +5232,11 @@ function preserveNewLines(body) {
   return body.replace(/\n/g, '<br/>');
 }
 function parseAndPreserveNewlines(body) {
-  if (!body) {
+  if (!hasStringContent(body)) {
     return EMPTY_FIELD;
   }
 
-  var escapedBody = escape(body);
-  return parser(preserveNewLines(escapedBody));
+  return parser(preserveNewLines(escape(body)));
 }
 function getDisplayName(component) {
   if (!component) {
@@ -5318,4 +5381,4 @@ function getPercentDisplay(value) {
   return new Decimal(value).times(CENT_DECIMAL).toString();
 }
 
-export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, insertIf, dateToday, getPercentValue, getPercentDisplay };
+export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, insertIf, dateToday, getPercentValue, getPercentDisplay };
