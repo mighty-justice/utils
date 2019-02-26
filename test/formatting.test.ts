@@ -81,13 +81,13 @@ describe('formatting', () => {
     expect(util.getOrDefault('Hello')).toBe('Hello');
     expect(util.getOrDefault('Hello                     ')).toBe('Hello');
     expect(util.getOrDefault(123)).toBe(123);
+    expect(util.getOrDefault(0)).toBe(0);
   });
 
-  it('Correctly displays default value when a falsy value passed', () => {
+  it('Correctly displays default value when an empty value is passed', () => {
     expect(util.getOrDefault(null)).toBe('--');
     expect(util.getOrDefault(undefined)).toBe('--');
     expect(util.getOrDefault('')).toBe('--');
-    expect(util.getOrDefault(0)).toBe('--');
     expect(util.getOrDefault(' ')).toBe('--');
     expect(util.getOrDefault('                              ')).toBe('--');
   });
@@ -141,6 +141,7 @@ describe('formatting', () => {
     expect(util.formatMoneyInput('1,222.00')).toBe(1222);
     expect(util.formatMoneyInput(null)).toBe(null);
     expect(util.formatMoneyInput(undefined)).toBe(undefined);
+    expect(util.formatMoneyInput('')).toBe('');
     expect(util.formatMoneyInput('123')).toBe(123);
     expect(util.formatMoneyInput('5,757.57')).toBe(5757.57);
     expect(util.formatMoneyInput('123,456,789.99')).toBe(123456789.99);

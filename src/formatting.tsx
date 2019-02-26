@@ -9,6 +9,8 @@ import {
   get,
   has,
   isBoolean,
+  isNumber,
+  isString,
   map,
   reject,
   result,
@@ -19,21 +21,25 @@ import {
 
 import { DATE_FORMATS, EMPTY_FIELD } from './constants';
 
+export function hasStringContent (value: unknown): value is string {
+  if (!isString(value)) { return false; }
+  return !!value.replace(/ /g, '').length;
+}
+
+export function hasStringOrNumberContent (value: unknown): value is number | string {
+  return hasStringContent(value) || isNumber(value);
+}
+
 export function splitName (name?: string | null) {
-  if (name === undefined || name === null) {
-    return ['', ''];
-  }
+  if (!hasStringContent(name)) { return ['', '']; }
 
   const [firstName, ...lastName] = name.trim().split(' ');
   return [firstName, lastName.join(' ').trim()];
 }
 
 export function splitCommaList (str?: string | null) {
-  if (str === undefined || str === null || str.trim() === '') {
-    return [];
-  }
+  if (!hasStringContent(str)) { return []; }
 
-  // tslint:disable-next-line no-magic-numbers
   if (str.indexOf(',') === -1) {
     return [str.trim()];
   }
@@ -46,15 +52,15 @@ export function formatFullName (firstName?: string, lastName?: string) {
 }
 
 export function formatPhoneNumber (input?: string | null) {
-  if (input === undefined || input === null || input === '') { return EMPTY_FIELD }
+  if (!hasStringContent(input)) { return EMPTY_FIELD }
 
   const phoneNumbers = input.match(/\d/g) || []
-    , phoneNotNumbers = input.match(/[^0-9\-\(\)]/g) || []
+    , phoneNotNumbers = input.match(/[^0-9\-()]/g) || []
     , PHONE_FORMATS: { [key: number]: string } = {
-      12: '+## (###) ###-####',
-      11: '+# (###) ###-####',
-      10: '(###) ###-####',
       7: '###-####',
+      10: '(###) ###-####',
+      11: '+# (###) ###-####',
+      12: '+## (###) ###-####',
     };
 
   if (phoneNotNumbers.length) {
@@ -76,7 +82,7 @@ export function formatPhoneNumber (input?: string | null) {
 }
 
 export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.date) {
-  return value
+  return hasStringContent(value)
     ? format(value, dateFormat)
     : EMPTY_FIELD;
 }
@@ -93,14 +99,20 @@ export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue 
   return defaultValue;
 }
 
-export function getOrDefault (obj?: any) {
-  try {
-    return obj.trim() || EMPTY_FIELD;
+export function getOrDefault (value?: any) {
+  const isUndefined = value === undefined
+    , isNull = value === null
+    , isEmptyString = isString(value) && !hasStringContent(value);
+
+  if (isUndefined || isNull || isEmptyString) {
+    return EMPTY_FIELD;
   }
-  catch (err) {
-    // do nothing
+
+  if (isString(value)) {
+    return value.trim();
   }
-  return obj || EMPTY_FIELD;
+
+  return value;
 }
 
 export function formatSocialSecurityNumber (input?: null | string) {
@@ -109,41 +121,39 @@ export function formatSocialSecurityNumber (input?: null | string) {
 
   if (socialSecurityNumber) {
     const unformattedSSN = socialSecurityNumber.join('');
-    // tslint:disable-next-line no-magic-numbers
     return `${unformattedSSN.slice(0, 3)}-${unformattedSSN.slice(3, 5)}-${unformattedSSN.slice(5, 9)}`;
   }
+
   return EMPTY_FIELD;
 }
 
 export function formatPercentage (value: null | number | string, decimalPoints = 2) {
+  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+
   const zeros = times(decimalPoints, () => '0').join('')
     , formattingString = `0.${zeros}%`;
-  return (value || value === 0) ? numeral(value).format(formattingString) : EMPTY_FIELD;
+
+  return numeral(value).format(formattingString);
 }
 
 export function formatMoney (value?: null | number | string) {
-  return (value || value === 0)
-    ? numeral(value).format('$0,0.00')
-    : EMPTY_FIELD;
+  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+  return numeral(value).format('$0,0.00');
 }
 
-export function formatParagraphs (field?: null | string) {
-  return field
-    ? field.split(/\r?\n/).map((s, i) => <p key={i}>{s}</p>)
-    : EMPTY_FIELD;
+export function formatParagraphs (value?: null | string) {
+  if (!hasStringContent(value)) { return EMPTY_FIELD; }
+  return value.split(/\r?\n/).map((s, i) => <p key={i}>{s}</p>);
 }
 
 export function formatCommaSeparatedNumber (value?: null | number | string) {
-  return (value || value === 0)
-    ? numeral(value).format('0,0')
-    : EMPTY_FIELD;
+  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+  return numeral(value).format('0,0');
 }
 
 export function formatDelimitedList (list?: null | string[], delimiter = ', ') {
-  if (list) {
-    return getOrDefault(list.join(delimiter));
-  }
-  return EMPTY_FIELD;
+  if (!list) { return EMPTY_FIELD; }
+  return getOrDefault(list.join(delimiter));
 }
 
 export function mapBooleanToText (bool?: boolean | null, {mapUndefinedToNo} = {mapUndefinedToNo: false}) {
@@ -159,13 +169,12 @@ export function mapBooleanToText (bool?: boolean | null, {mapUndefinedToNo} = {m
 }
 
 export function formatMoneyInput (value?: null | number | string) {
+  if (!hasStringOrNumberContent(value)) { return value; }
   return value && numeral(value).value();
 }
 
 export function formatDuration (iso8601?: null | string) {
-  if (!iso8601) {
-    return EMPTY_FIELD;
-  }
+  if (!hasStringContent(iso8601)) { return EMPTY_FIELD; }
 
   // Translate object to KV Pair
   let unitCounts = Object.entries(parse(iso8601));
@@ -186,9 +195,7 @@ export function formatDuration (iso8601?: null | string) {
 }
 
 export function formatWebsite (website: string | undefined, text?: string): (string | JSX.Element) {
-  if (!website) {
-    return EMPTY_FIELD;
-  }
+  if (!hasStringContent(website)) { return EMPTY_FIELD; }
 
   return (
     <a href={website} rel='noopener noreferrer' target='_blank'>{text || website}</a>
@@ -196,10 +203,7 @@ export function formatWebsite (website: string | undefined, text?: string): (str
 }
 
 export function stripNonAlpha (str?: string | null) {
-  if (str === undefined || str === null) {
-    return '';
-  }
-
+  if (!hasStringContent(str)) { return ''; }
   return str.replace(/[^A-Za-z]/g, '');
 }
 
@@ -217,16 +221,12 @@ export function preserveNewLines (body: string) {
 }
 
 export function parseAndPreserveNewlines (body?: string) {
-  if (!body) { return EMPTY_FIELD; }
-  const escapedBody = escape(body);
-  return parser(preserveNewLines(escapedBody));
+  if (!hasStringContent(body)) { return EMPTY_FIELD; }
+  return parser(preserveNewLines(escape(body)));
 }
 
 export function getDisplayName (component: any): (string | undefined) {
-  if (!component) {
-    return undefined;
-  }
-
+  if (!component) { return undefined; }
   return component.displayName || component.name || 'Component';
 }
 
