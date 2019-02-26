@@ -1,6 +1,6 @@
 import React from 'react';
 import { parse } from 'iso8601-duration';
-import { format } from 'date-fns';
+import { format as dateFnsFormat } from 'date-fns';
 import numeral from 'numeral';
 import parser from 'html-react-parser';
 
@@ -20,6 +20,20 @@ import {
 } from 'lodash';
 
 import { DATE_FORMATS, EMPTY_FIELD } from './constants';
+
+export function canReplaceSymbols (template: string, chars: string[]): boolean {
+  return (template.split('#').length - 1) === chars.length;
+}
+
+export function replaceSymbolsWithChars (template: string, chars: string[]) {
+  const charsReverse = chars.reverse();
+
+  return template
+    .split('')
+    .map(char => (char === '#') ? charsReverse.pop() : char)
+    .join('')
+    ;
+}
 
 export function hasStringContent (value: unknown): value is string {
   if (!isString(value)) { return false; }
@@ -52,39 +66,33 @@ export function formatFullName (firstName?: string, lastName?: string) {
 }
 
 export function formatPhoneNumber (input?: string | null) {
-  if (!hasStringContent(input)) { return EMPTY_FIELD }
+  if (!hasStringContent(input)) { return EMPTY_FIELD; }
 
   const phoneNumbers = input.match(/\d/g) || []
     , phoneNotNumbers = input.match(/[^0-9\-()]/g) || []
-    , PHONE_FORMATS: { [key: number]: string } = {
-      7: '###-####',
-      10: '(###) ###-####',
-      11: '+# (###) ###-####',
-      12: '+## (###) ###-####',
-    };
+    , PHONE_FORMATS: string[] = [
+      '###-####',
+      '(###) ###-####',
+      '+# (###) ###-####',
+      '+## (###) ###-####',
+    ];
 
   if (phoneNotNumbers.length) {
     return input;
   }
 
-  if (phoneNumbers.length in PHONE_FORMATS) {
-    const phoneNumbersReverse = phoneNumbers.reverse()
-      , format = PHONE_FORMATS[phoneNumbers.length]
-
-    return format
-      .split('')
-      .map(char => (char === '#') ? phoneNumbersReverse.pop() : char)
-      .join('')
-      ;
+  for (const template of PHONE_FORMATS) {
+    if (canReplaceSymbols(template, phoneNumbers)) {
+      return replaceSymbolsWithChars(template, phoneNumbers);
+    }
   }
 
   return input;
 }
 
 export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.date) {
-  return hasStringContent(value)
-    ? format(value, dateFormat)
-    : EMPTY_FIELD;
+  if (!hasStringContent(value)) { return EMPTY_FIELD; }
+  return dateFnsFormat(value, dateFormat);
 }
 
 export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
@@ -115,13 +123,14 @@ export function getOrDefault (value?: any) {
   return value;
 }
 
-export function formatSocialSecurityNumber (input?: null | string) {
-  // check ssn not already formatted
-  const socialSecurityNumber = input && input.match(/\d/g);
+export function formatSocialSecurityNumber (value?: null | string) {
+  if (!hasStringContent(value)) { return EMPTY_FIELD; }
 
-  if (socialSecurityNumber) {
-    const unformattedSSN = socialSecurityNumber.join('');
-    return `${unformattedSSN.slice(0, 3)}-${unformattedSSN.slice(3, 5)}-${unformattedSSN.slice(5, 9)}`;
+  const ssnNums: string[] = value && value.match(/\d/g) || []
+    , template = '###-##-####';
+
+  if (canReplaceSymbols(template, ssnNums)) {
+    return replaceSymbolsWithChars(template, ssnNums);
   }
 
   return EMPTY_FIELD;
