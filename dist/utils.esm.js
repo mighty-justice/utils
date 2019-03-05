@@ -6,7 +6,7 @@ import { parse } from 'iso8601-duration';
 import { format } from 'date-fns';
 import numeral from 'numeral';
 import parser from 'html-react-parser';
-import { isString, isNumber, has, result, get, times, isBoolean, escape, startCase, sortBy, map, reject } from 'lodash';
+import { isString, isNumber, has, result, get, times, isBoolean, escape, startCase, sortBy, map, reject, mapValues } from 'lodash';
 
 /*
  *
@@ -5283,6 +5283,25 @@ function toKey(dict) {
   }).join('&');
   return "?".concat(dictString);
 }
+function formatAddress(address) {
+  if (!address) {
+    return '--, --, -- --';
+  }
+
+  var filledInAddress = mapValues(address, function (s) {
+    return s || EMPTY_FIELD;
+  }),
+      address1 = filledInAddress.address1,
+      city = filledInAddress.city,
+      state = filledInAddress.state,
+      zip_code = filledInAddress.zip_code,
+      address2 = address.address2,
+      joinedAddress = [address1, address2].join(' ').trim();
+  return "".concat(joinedAddress, ", ").concat(city, ", ").concat(state, " ").concat(zip_code);
+}
+function formatAddressMultiline(address) {
+  return parser(formatAddress(address).replace(/, /g, '<br/>'));
+}
 
 function createDisabledContainer(WrappedComponent) {
   var _class, _class2, _temp;
@@ -5381,4 +5400,4 @@ function getPercentDisplay(value) {
   return new Decimal(value).times(CENT_DECIMAL).toString();
 }
 
-export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, insertIf, dateToday, getPercentValue, getPercentDisplay };
+export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, dateToday, getPercentValue, getPercentDisplay };

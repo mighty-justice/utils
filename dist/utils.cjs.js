@@ -5290,6 +5290,25 @@ function toKey(dict) {
   }).join('&');
   return "?".concat(dictString);
 }
+function formatAddress(address) {
+  if (!address) {
+    return '--, --, -- --';
+  }
+
+  var filledInAddress = lodash.mapValues(address, function (s) {
+    return s || EMPTY_FIELD;
+  }),
+      address1 = filledInAddress.address1,
+      city = filledInAddress.city,
+      state = filledInAddress.state,
+      zip_code = filledInAddress.zip_code,
+      address2 = address.address2,
+      joinedAddress = [address1, address2].join(' ').trim();
+  return "".concat(joinedAddress, ", ").concat(city, ", ").concat(state, " ").concat(zip_code);
+}
+function formatAddressMultiline(address) {
+  return parser(formatAddress(address).replace(/, /g, '<br/>'));
+}
 
 function createDisabledContainer(WrappedComponent) {
   var _class, _class2, _temp;
@@ -5422,6 +5441,8 @@ exports.parseAndPreserveNewlines = parseAndPreserveNewlines;
 exports.getDisplayName = getDisplayName;
 exports.varToLabel = varToLabel;
 exports.toKey = toKey;
+exports.formatAddress = formatAddress;
+exports.formatAddressMultiline = formatAddressMultiline;
 exports.insertIf = insertIf;
 exports.dateToday = dateToday;
 exports.getPercentValue = getPercentValue;
