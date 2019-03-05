@@ -1,4 +1,5 @@
 /// <reference types="react" />
+import { IAddress } from './interfaces';
 export declare function canReplaceSymbols(template: string, chars: string[]): boolean;
 export declare function replaceSymbolsWithChars(template: string, chars: string[]): string;
 export declare function hasStringContent(value: unknown): value is string;
@@ -35,3 +36,5 @@ export declare function varToLabel(str: string): string;
 export declare function toKey(dict: {
     [key: string]: any;
 }): string;
+export declare function formatAddress(address?: IAddress | null): string;
+export declare function formatAddressMultiline(address?: IAddress | null): any;

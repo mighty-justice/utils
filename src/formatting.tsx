@@ -12,6 +12,7 @@ import {
   isNumber,
   isString,
   map,
+  mapValues,
   reject,
   result,
   sortBy,
@@ -20,6 +21,7 @@ import {
 } from 'lodash';
 
 import { DATE_FORMATS, EMPTY_FIELD } from './constants';
+import { IAddress } from './interfaces';
 
 export function canReplaceSymbols (template: string, chars: string[]): boolean {
   return (template.split('#').length - 1) === chars.length;
@@ -272,4 +274,19 @@ export function toKey (dict: { [key: string]: any }) {
   )).join('&');
 
   return `?${dictString}`;
+}
+
+export function formatAddress (address?: IAddress | null) {
+  if (!address) { return '--, --, -- --'; }
+
+  const filledInAddress = mapValues(address, s => s || EMPTY_FIELD)
+    , { address1, city, state, zip_code } = filledInAddress
+    , { address2 } = address
+    , joinedAddress = [address1, address2].join(' ').trim();
+
+  return `${joinedAddress}, ${city}, ${state} ${zip_code}`;
+}
+
+export function formatAddressMultiline (address?: IAddress | null) {
+  return parser(formatAddress(address).replace(/, /g, '<br/>'));
 }
