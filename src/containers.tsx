@@ -16,7 +16,7 @@ export interface IGuardedContainerProps {
   isGuarded: boolean;
 }
 
-export function createDisabledContainer (WrappedComponent: React.ReactNode): React.ReactNode {
+export function createDisabledContainer (WrappedComponent:  React.ComponentType<any>): React.ReactNode {
   @observer
   class DisabledContainer extends Component<IDisabledContainerProps> {
     public static displayName = `DisabledContainer(${getDisplayName(WrappedComponent)})`;
@@ -45,7 +45,7 @@ export function createDisabledContainer (WrappedComponent: React.ReactNode): Rea
 export function createGuardedContainer ({ isGuarded, enabledComponent, disabledComponent }: IGuardedContainerProps): React.ComponentClass {
   @observer
   class GuardedContainer extends Component {
-    private readonly GuardedComponent: React.ReactNode;
+    private readonly GuardedComponent: any;
     public static displayName = `GuardedContainer(${getDisplayName(enabledComponent)})`;
 
     public constructor (props: any) {
@@ -59,7 +59,7 @@ export function createGuardedContainer ({ isGuarded, enabledComponent, disabledC
     }
 
     public render () {
-      return <this.GuardedComponent {...this.props} />;
+      return <this.GuardedComponent {...this.props as any} />;
     }
   }
 
