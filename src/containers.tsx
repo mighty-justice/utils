@@ -16,7 +16,7 @@ export interface IGuardedContainerProps {
   isGuarded: boolean;
 }
 
-export function createDisabledContainer (WrappedComponent:  React.ComponentType<any>): React.ReactNode {
+export function createDisabledContainer (WrappedComponent: React.ComponentType<any>): React.ReactNode {
   @observer
   class DisabledContainer extends Component<IDisabledContainerProps> {
     public static displayName = `DisabledContainer(${getDisplayName(WrappedComponent)})`;
