@@ -59,7 +59,7 @@ export function createGuardedContainer ({ isGuarded, enabledComponent, disabledC
     }
 
     public render () {
-      return <this.GuardedComponent {...this.props as any} />;
+      return <this.GuardedComponent {...this.props} />;
     }
   }
 
