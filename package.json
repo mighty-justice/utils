@@ -1,6 +1,6 @@
 {
   "name": "@mighty-justice/utils",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Standardization of small utilities across Mighty",
   "main": "dist/utils.cjs.js",
   "module": "dist/utils.esm.js",
@@ -134,6 +134,7 @@
     "iso8601-duration": "^1.1.7",
     "mobx": "^4",
     "mobx-react": "^5",
+    "moment": "^2.24.0",
     "numeral": "^2.0.6"
   }
 }
