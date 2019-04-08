@@ -133,6 +133,7 @@
     "iso8601-duration": "^1.1.7",
     "mobx": "^4",
     "mobx-react": "^5",
+    "moment": "^2.24.0",
     "numeral": "^2.0.6"
   }
 }

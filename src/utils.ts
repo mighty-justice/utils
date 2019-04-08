@@ -1,14 +1,9 @@
 import Decimal from 'decimal.js';
 
-import { CENT_DECIMAL, DATE_FORMATS } from './constants';
-import { formatDate } from './formatting';
+import { CENT_DECIMAL } from './constants';
 
 export function insertIf (condition: boolean, element: any): any[] {
   return condition ? [element] : [];
-}
-
-export function dateToday () {
-  return formatDate((new Date()).toISOString(), DATE_FORMATS.date_value);
 }
 
 export function getPercentValue (value?: null | string): string {
