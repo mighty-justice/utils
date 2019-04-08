@@ -73,7 +73,7 @@
     "html-react-parser": "0",
     "iso8601-duration": "1",
     "lodash": "4",
-    "mobx": "5",
+    "mobx": "4-5",
     "mobx-react": "5",
     "numeral": "2",
     "react": "16"
@@ -131,8 +131,8 @@
     "decimal.js": "^10.1.1",
     "html-react-parser": "0.6.1",
     "iso8601-duration": "^1.1.7",
-    "mobx": "^5.9.0",
-    "mobx-react": "^5.4.3",
+    "mobx": "^4",
+    "mobx-react": "^5",
     "numeral": "^2.0.6"
   }
 }
