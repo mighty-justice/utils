@@ -27042,8 +27042,7 @@ function getPercentDisplay(value) {
 }
 
 function isValidBirthdate(value) {
-  return !!value // Not empty
-  && value.length === '####-##-##'.length // ISO date
+  return !value || value.length === '####-##-##'.length // ISO date
   && moment(value).isValid() // Real day
   && moment(value).isBefore(moment()) // In the past
   ;
