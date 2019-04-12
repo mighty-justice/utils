@@ -2,6 +2,9 @@ import * as util from '../src';
 
 describe('validation', () => {
   it('isValidBirthdate', () => {
+    expect(util.isValidBirthdate('')).toBe(true);
+    expect(util.isValidBirthdate('8')).toBe(false);
+
     expect(util.isValidBirthdate('8-01-01')).toBe(false);
     expect(util.isValidBirthdate('98-01-01')).toBe(false);
     expect(util.isValidBirthdate('998-01-01')).toBe(false);
