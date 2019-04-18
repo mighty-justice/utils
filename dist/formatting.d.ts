@@ -32,7 +32,7 @@ export declare function getType(fullType?: null | string): string | null | undef
 export declare function preserveNewLines(body: string): string;
 export declare function parseAndPreserveNewlines(body?: string): any;
 export declare function getDisplayName(component: any): (string | undefined);
-export declare function varToLabel(str: string): string;
+export declare const varToLabel: (str: string) => string;
 export declare function toKey(dict: {
     [key: string]: any;
 }): string;
