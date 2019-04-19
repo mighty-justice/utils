@@ -3,6 +3,7 @@ import { parse } from 'iso8601-duration';
 import { format as dateFnsFormat } from 'date-fns';
 import numeral from 'numeral';
 import parser from 'html-react-parser';
+import memoize from 'fast-memoize';
 
 import {
   escape,
@@ -241,7 +242,7 @@ export function getDisplayName (component: any): (string | undefined) {
   return component.displayName || component.name || 'Component';
 }
 
-export function varToLabel (str: string) {
+function _varToLabel (str: string) {
   // Sourced significantly from https://github.com/gouch/to-title-case/blob/master/to-title-case.js
   const smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i
     , suffix = (str).split('.').pop() || ''
@@ -258,6 +259,8 @@ export function varToLabel (str: string) {
     return match.charAt(0).toUpperCase() + match.substr(1);
   });
 }
+
+export const varToLabel: (str: string) => string = memoize(_varToLabel);
 
 export function toKey (dict: { [key: string]: any }) {
   const dictSorted = sortBy(map(dict, (value: any, key: string) => [key, value]))
