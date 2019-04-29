@@ -257,16 +257,12 @@ function _varToLabel (str: string) {
     const notFirstWord = index > 0
       , notOnlyWord = index + match.length !== title.length
       , hasSmallWords = match.search(smallWords) > -1
-      , notAfterColon = title.charAt(index - 2) !== ':'
-      , notFirstPartOfHyphen = (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-')
       ;
 
     if (
       notFirstWord
       && notOnlyWord
       && hasSmallWords
-      && notAfterColon
-      && notFirstPartOfHyphen
     ) {
       return match.toLowerCase();
     }
