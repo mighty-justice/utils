@@ -9,6 +9,7 @@ export declare function splitCommaList(str?: string | null): string[];
 export declare function formatFullName(firstName?: string, lastName?: string): string;
 export declare function formatPhoneNumber(input?: string | null): string;
 export declare function formatDate(value?: string | null, dateFormat?: string): string;
+export declare function formatDateTime(value?: string | null): string;
 export declare function getNameOrDefault(obj?: unknown, { field, defaultValue }?: {
     field?: string | undefined;
     defaultValue?: string | undefined;

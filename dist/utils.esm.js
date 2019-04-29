@@ -4834,6 +4834,8 @@ PI = new Decimal(PI);
 var EMPTY_FIELD = '--';
 var DATE_FORMATS = {
   date: 'MM/DD/YY',
+  date_at_time: 'MM/DD/YY @ h:mmA',
+  // ex. 07/14/16 @ 2:24PM
   date_value: 'YYYY-MM-DD'
 };
 var CENT_DECIMAL = new Decimal('100');
@@ -22217,6 +22219,9 @@ function formatDate(value) {
 
   return dateFns_50(value, dateFormat);
 }
+function formatDateTime(value) {
+  return formatDate(value, DATE_FORMATS.date_at_time);
+}
 function getNameOrDefault(obj) {
   var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
       _ref$field = _ref.field,
@@ -27197,4 +27202,4 @@ function isValidBirthdate(value) {
   ;
 }
 
-export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidBirthdate };
+export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, formatDateTime, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidBirthdate };

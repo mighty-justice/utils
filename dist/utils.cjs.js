@@ -4841,6 +4841,8 @@ PI = new Decimal(PI);
 var EMPTY_FIELD = '--';
 var DATE_FORMATS = {
   date: 'MM/DD/YY',
+  date_at_time: 'MM/DD/YY @ h:mmA',
+  // ex. 07/14/16 @ 2:24PM
   date_value: 'YYYY-MM-DD'
 };
 var CENT_DECIMAL = new Decimal('100');
@@ -22224,6 +22226,9 @@ function formatDate(value) {
 
   return dateFns_50(value, dateFormat);
 }
+function formatDateTime(value) {
+  return formatDate(value, DATE_FORMATS.date_at_time);
+}
 function getNameOrDefault(obj) {
   var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
       _ref$field = _ref.field,
@@ -27221,6 +27226,7 @@ exports.splitCommaList = splitCommaList;
 exports.formatFullName = formatFullName;
 exports.formatPhoneNumber = formatPhoneNumber;
 exports.formatDate = formatDate;
+exports.formatDateTime = formatDateTime;
 exports.getNameOrDefault = getNameOrDefault;
 exports.getOrDefault = getOrDefault;
 exports.formatSocialSecurityNumber = formatSocialSecurityNumber;
