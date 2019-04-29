@@ -130,6 +130,12 @@ describe('formatting', () => {
     expect(util.formatDate('2016-10-03')).toBe('10/03/16');
   });
 
+  it('Correctly formats datetimes', () => {
+    expect(util.formatDateTime(undefined)).toBe('--');
+    expect(util.formatDateTime(null)).toBe('--');
+    expect(util.formatDateTime('2008-09-22T13:57:31.2311892-04:00')).toBe('09/22/08 @ 5:57PM');
+  });
+
   it('Correctly maps booleans to yes and no', () => {
     expect(util.mapBooleanToText(true)).toBe('Yes');
     expect(util.mapBooleanToText(false)).toBe('No');
