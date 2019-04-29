@@ -133,7 +133,7 @@ describe('formatting', () => {
   it('Correctly formats datetimes', () => {
     expect(util.formatDateTime(undefined)).toBe('--');
     expect(util.formatDateTime(null)).toBe('--');
-    expect(util.formatDateTime('2008-09-22T13:57:31.2311892-04:00')).toBe('09/22/08 @ 5:57PM');
+    expect(util.formatDateTime('2008-09-22T13:57:31.2311892')).toBe('09/22/08 @ 1:57PM');
   });
 
   it('Correctly maps booleans to yes and no', () => {
