@@ -3,6 +3,17 @@ import * as util from '../src';
 import { EMPTY_FIELD } from '../src';
 
 describe('formatting', () => {
+  it('Correctly converts a variable name to a form label', () => {
+    expect(util.varToLabel('')).toBe('');
+    expect(util.varToLabel('case-type')).toBe('Case Type');
+    expect(util.varToLabel('case_type')).toBe('Case Type');
+    expect(util.varToLabel('CaseType')).toBe('Case Type');
+    expect(util.varToLabel('plaintiff.first_name')).toBe('First Name');
+    expect(util.varToLabel('STATE OF INCIDENT')).toBe('State of Incident');
+    expect(util.varToLabel('state_of_incident')).toBe('State of Incident');
+    expect(util.varToLabel('stateOfIncident')).toBe('State of Incident');
+  });
+
   it('Correctly splits a name', () => {
     expect(util.splitName('John Smith')).toEqual(['John', 'Smith']);
     expect(util.splitName('John Smith Sr.')).toEqual(['John', 'Smith Sr.']);

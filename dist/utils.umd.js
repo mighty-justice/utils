@@ -22427,11 +22427,15 @@
         suffix = str.split('.').pop() || '',
         formatted = lodash.startCase(suffix);
     return formatted.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function (match, index, title) {
-      if (index > 0 && index + match.length !== title.length && match.search(smallWords) > -1 && title.charAt(index - 2) !== ':' && (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-') && title.charAt(index - 1).search(/[^\s-]/) < 0) {
+      var notFirstWord = index > 0,
+          notOnlyWord = index + match.length !== title.length,
+          hasSmallWords = match.search(smallWords) > -1;
+
+      if (notFirstWord && notOnlyWord && hasSmallWords) {
         return match.toLowerCase();
       }
 
-      return match.charAt(0).toUpperCase() + match.substr(1);
+      return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
     });
   }
 
@@ -27198,10 +27202,13 @@
     return new Decimal(value).times(CENT_DECIMAL).toString();
   }
 
-  function isValidBirthdate(value) {
+  function isValidDate(value) {
     return !value || value.length === '####-##-##'.length // ISO date
     && moment(value).isValid() // Real day
-    && moment(value).isBefore(moment()) // In the past
+    ;
+  }
+  function isValidPastDate(value) {
+    return !value || isValidDate(value) && moment(value).isBefore(moment()) // In the past
     ;
   }
 
@@ -27248,7 +27255,8 @@
   exports.insertIf = insertIf;
   exports.getPercentValue = getPercentValue;
   exports.getPercentDisplay = getPercentDisplay;
-  exports.isValidBirthdate = isValidBirthdate;
+  exports.isValidDate = isValidDate;
+  exports.isValidPastDate = isValidPastDate;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
