@@ -98,8 +98,8 @@ export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.dat
   return dateFnsFormat(value, dateFormat);
 }
 
-export function formatDateTime (value?: string) {
-  return value && dateFnsFormat(value, DATE_FORMATS.date_at_time);
+export function formatDateTime (value?: string | null) {
+  return formatDate(value, DATE_FORMATS.date_at_time);
 }
 
 export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
