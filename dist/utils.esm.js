@@ -22424,11 +22424,15 @@ function _varToLabel(str) {
       suffix = str.split('.').pop() || '',
       formatted = startCase(suffix);
   return formatted.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function (match, index, title) {
-    if (index > 0 && index + match.length !== title.length && match.search(smallWords) > -1 && title.charAt(index - 2) !== ':' && (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-') && title.charAt(index - 1).search(/[^\s-]/) < 0) {
+    var notFirstWord = index > 0,
+        notOnlyWord = index + match.length !== title.length,
+        hasSmallWords = match.search(smallWords) > -1;
+
+    if (notFirstWord && notOnlyWord && hasSmallWords) {
       return match.toLowerCase();
     }
 
-    return match.charAt(0).toUpperCase() + match.substr(1);
+    return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
   });
 }
 
@@ -27195,11 +27199,14 @@ function getPercentDisplay(value) {
   return new Decimal(value).times(CENT_DECIMAL).toString();
 }
 
-function isValidBirthdate(value) {
+function isValidDate(value) {
   return !value || value.length === '####-##-##'.length // ISO date
   && moment(value).isValid() // Real day
-  && moment(value).isBefore(moment()) // In the past
+  ;
+}
+function isValidPastDate(value) {
+  return !value || isValidDate(value) && moment(value).isBefore(moment()) // In the past
   ;
 }
 
-export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, formatDateTime, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidBirthdate };
+export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, formatDateTime, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidDate, isValidPastDate };
