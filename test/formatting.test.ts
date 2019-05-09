@@ -277,4 +277,27 @@ describe('formatting', () => {
     expect(parsedAddressMultilineFull[3].type).toBe('br');
     expect(parsedAddressMultilineFull[4]).toBe('NY 10001');
   });
+
+  it('Correctly formats an object as a URL param string', () => {
+    expect(util.toKey({})).toBe('');
+
+    // String or number
+    expect(util.toKey({ field: 2 })).toBe('?field=2');
+    expect(util.toKey({ field: '2' })).toBe('?field=2');
+
+    // Empty attributes
+    expect(util.toKey({ field: undefined })).toBe('');
+    expect(util.toKey({ field: null })).toBe('');
+
+    // boolean
+    expect(util.toKey({ field: true })).toBe('?field=true');
+    expect(util.toKey({ field: false })).toBe('?field=false');
+
+    // Ordering
+    expect(util.toKey({ a: true, b: true })).toBe('?a=true&b=true');
+    expect(util.toKey({ b: true, a: true })).toBe('?a=true&b=true');
+
+    // Arrays
+    expect(util.toKey({ field: [true, true, false] })).toBe('?field=true%2Ctrue%2Cfalse');
+  });
 });
