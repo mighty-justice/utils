@@ -117,6 +117,12 @@ export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue 
     if (key.endsWith(field)) { name = get(obj, key); }
   });
 
+  keys.forEach((key: string) => {
+    if (key === firstKey) { first = get(obj, key); }
+    if (key === lastKey) { last = get(obj, key); }
+    if (key === field) { name = get(obj, key); }
+  });
+
   const fullName = [first, last].filter(s => !!s).join(' ').trim();
 
   return fullName || name || defaultValue;
