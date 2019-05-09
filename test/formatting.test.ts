@@ -70,8 +70,10 @@ describe('formatting', () => {
   });
 
   it('Correctly formats a name when passed an object', () => {
+    expect(util.getNameOrDefault({plaintiff__first_name: 'John', plaintiff__last_name: 'Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({first_name: 'John', last_name: 'Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({name: 'John Smith'})).toBe('John Smith');
+    expect(util.getNameOrDefault({law_firm__name: 'John Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({customName: 'John Smith'}, {field: 'customName'})).toBe('John Smith');
     expect(util.getNameOrDefault({customName: 'John Smith'})).toBe('--');
     expect(util.getNameOrDefault({first_name: 'John'})).toBe('John');
@@ -276,5 +278,12 @@ describe('formatting', () => {
     expect(parsedAddressMultilineFull[2]).toBe('New York');
     expect(parsedAddressMultilineFull[3].type).toBe('br');
     expect(parsedAddressMultilineFull[4]).toBe('NY 10001');
+  });
+
+  it('Correctly formats an object as a URL param string', () => {
+    expect(util.toKey({})).toBe('');
+    expect(util.toKey({ field: 2 })).toBe('?field=2');
+    expect(util.toKey({ field: '2' })).toBe('?field=2');
+    expect(util.toKey({ field: null })).toBe('');
   });
 });

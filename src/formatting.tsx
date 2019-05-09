@@ -8,14 +8,13 @@ import memoize from 'fast-memoize';
 import {
   escape,
   get,
-  has,
   isBoolean,
   isNumber,
+  isObject,
   isString,
   map,
   mapValues,
   reject,
-  result,
   sortBy,
   startCase,
   times,
@@ -103,15 +102,24 @@ export function formatDateTime (value?: string | null) {
 }
 
 export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
-  if (obj) {
-    if (has(obj, 'first_name')) {
-      return (`${result(obj, 'first_name', '')} ${result(obj, 'last_name', '')}`).trim();
-    }
-    if (has(obj, field)) {
-      return get(obj, field);
-    }
-  }
-  return defaultValue;
+  const isObjectType = (x: unknown): x is object => isObject(x);
+  if (!isObjectType(obj)) { return defaultValue; }
+
+  const firstKey = `first_${field}`
+    , lastKey = `last_${field}`
+    , keys = Object.keys(obj).filter(key => key.endsWith(field))
+    ;
+
+  let first, last, name;
+  keys.forEach((key: string) => {
+    if (key.endsWith(firstKey)) { first = get(obj, key); }
+    if (key.endsWith(lastKey)) { last = get(obj, key); }
+    if (key.endsWith(field)) { name = get(obj, key); }
+  });
+
+  const fullName = [first, last].filter(s => !!s).join(' ').trim();
+
+  return fullName || name || defaultValue;
 }
 
 export function getOrDefault (value?: any) {
