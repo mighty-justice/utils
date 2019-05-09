@@ -70,12 +70,8 @@ describe('formatting', () => {
   });
 
   it('Correctly formats a name when passed an object', () => {
-    expect(util.getNameOrDefault({ name: 'Mu & Mink', admin_name: 'Sam' })).toBe('Mu & Mink');
-
-    expect(util.getNameOrDefault({plaintiff__first_name: 'John', plaintiff__last_name: 'Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({first_name: 'John', last_name: 'Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({name: 'John Smith'})).toBe('John Smith');
-    expect(util.getNameOrDefault({law_firm__name: 'John Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({customName: 'John Smith'}, {field: 'customName'})).toBe('John Smith');
     expect(util.getNameOrDefault({customName: 'John Smith'})).toBe('--');
     expect(util.getNameOrDefault({first_name: 'John'})).toBe('John');
