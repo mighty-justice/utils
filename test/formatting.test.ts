@@ -256,26 +256,35 @@ describe('formatting', () => {
 
   it('Correctly formats an address', () => {
     expect(util.formatAddress(null)).toBe('--, --, -- --');
-    expect(util.formatAddress({address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001'})).toBe('123 Fake St Apt 1-D, New York, NY 10001');
-    expect(util.formatAddress({address1: '', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001'})).toBe('-- Apt 1-D, New York, NY 10001');
-    expect(util.formatAddress({address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'})).toBe('123 Fake St, New York, NY 10001');
-    expect(util.formatAddress({address1: '123 Fake St', address2: 'Apt 1-D', city: '', state: 'NY', zip_code: '10001'})).toBe('123 Fake St Apt 1-D, --, NY 10001');
-    expect(util.formatAddress({address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: '', zip_code: '10001'})).toBe('123 Fake St Apt 1-D, New York, -- 10001');
-    expect(util.formatAddress({address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: ''})).toBe('123 Fake St Apt 1-D, New York, NY --');
+    expect(util.formatAddress(
+      {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001'}),
+    ).toBe('123 Fake St Apt 1-D, New York, NY 10001');
+    expect(util.formatAddress(
+      {address1: '', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001'}),
+    ).toBe('-- Apt 1-D, New York, NY 10001');
+    expect(util.formatAddress(
+      {address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'}),
+    ).toBe('123 Fake St, New York, NY 10001');
+    expect(util.formatAddress(
+      {address1: '123 Fake St', address2: 'Apt 1-D', city: '', state: 'NY', zip_code: '10001'}),
+    ).toBe('123 Fake St Apt 1-D, --, NY 10001');
+    expect(util.formatAddress(
+      {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: '', zip_code: '10001'}),
+    ).toBe('123 Fake St Apt 1-D, New York, -- 10001');
+    expect(util.formatAddress(
+      {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: ''}),
+    ).toBe('123 Fake St Apt 1-D, New York, NY --');
 
     const parsedAddressMultilineNull = util.formatAddressMultiline(null);
     expect(parsedAddressMultilineNull[0]).toBe(EMPTY_FIELD);
     expect(parsedAddressMultilineNull[1].type).toBe('br');
-    expect(parsedAddressMultilineNull[2]).toBe(EMPTY_FIELD);
-    expect(parsedAddressMultilineNull[3].type).toBe('br');
-    expect(parsedAddressMultilineNull[4]).toBe('-- --');
+    expect(parsedAddressMultilineNull[2]).toBe('--, -- --');
 
-    const parsedAddressMultilineFull = util.formatAddressMultiline({address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'});
+    const parsedAddressMultilineFull = util.formatAddressMultiline(
+      {address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'});
     expect(parsedAddressMultilineFull[0]).toBe('123 Fake St');
     expect(parsedAddressMultilineFull[1].type).toBe('br');
-    expect(parsedAddressMultilineFull[2]).toBe('New York');
-    expect(parsedAddressMultilineFull[3].type).toBe('br');
-    expect(parsedAddressMultilineFull[4]).toBe('NY 10001');
+    expect(parsedAddressMultilineFull[2]).toBe('New York, NY 10001');
   });
 
   it('Correctly formats an object as a URL param string', () => {
