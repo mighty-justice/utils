@@ -1,6 +1,6 @@
 {
   "name": "@mighty-justice/utils",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Standardization of small utilities across Mighty",
   "main": "dist/utils.cjs.js",
   "module": "dist/utils.esm.js",
