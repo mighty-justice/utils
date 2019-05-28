@@ -22486,7 +22486,7 @@ function formatAddress(address) {
   return "".concat(joinedAddress, ", ").concat(city, ", ").concat(state, " ").concat(zip_code);
 }
 function formatAddressMultiline(address) {
-  return htmlReactParser(formatAddress(address).replace(/, /g, '<br/>'));
+  return htmlReactParser(formatAddress(address).replace(', ', '<br/>'));
 }
 
 function createDisabledContainer(WrappedComponent) {
