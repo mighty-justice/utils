@@ -114,6 +114,16 @@ describe('formatting', () => {
     expect(util.formatSocialSecurityNumber('12-34-56-78-9')).toBe('123-45-6789');
   });
 
+  it('Correctly formats an employer id number', () => {
+    expect(util.formatEmployerIdNumber(null)).toBe('--');
+    expect(util.formatEmployerIdNumber(undefined)).toBe('--');
+    expect(util.formatEmployerIdNumber('123456789')).toBe('12-3456789');
+    expect(util.formatEmployerIdNumber('12-345-6789')).toBe('12-3456789');
+    expect(util.formatEmployerIdNumber('12345-6789')).toBe('12-3456789');
+    expect(util.formatEmployerIdNumber('123-456789')).toBe('12-3456789');
+    expect(util.formatEmployerIdNumber('12-34-56-78-9')).toBe('12-3456789');
+  });
+
   it('Correctly formats percentages', () => {
     expect(util.formatPercentage(0.5)).toBe('50.00%');
     expect(util.formatPercentage(1.5)).toBe('150.00%');

@@ -130,17 +130,23 @@ export function getOrDefault (value?: any) {
   return value;
 }
 
-export function formatSocialSecurityNumber (value?: null | string) {
+function formatNumberFromTemplate (template: string, value?: null | string) {
   if (!hasStringContent(value)) { return EMPTY_FIELD; }
 
-  const ssnNums: string[] = value && value.match(/\d/g) || []
-    , template = '###-##-####';
-
-  if (canReplaceSymbols(template, ssnNums)) {
-    return replaceSymbolsWithChars(template, ssnNums);
+  const numberValues: string[] = value && value.match(/\d/g) || [];
+  if (canReplaceSymbols(template, numberValues)) {
+    return replaceSymbolsWithChars(template, numberValues);
   }
 
   return EMPTY_FIELD;
+}
+
+export function formatSocialSecurityNumber (value?: null | string) {
+  return formatNumberFromTemplate('###-##-####', value);
+}
+
+export function formatEmployerIdNumber (value?: null | string) {
+  return formatNumberFromTemplate('##-#######', value);
 }
 
 export function formatPercentage (value: null | number | string, decimalPoints = 2) {
