@@ -143,6 +143,19 @@ export function formatSocialSecurityNumber (value?: null | string) {
   return EMPTY_FIELD;
 }
 
+export function formatEmployerIdNumber (value?: null | string) {
+  if (!hasStringContent(value)) { return EMPTY_FIELD; }
+
+  const einNums: string[] = value && value.match(/\d/g) || []
+    , template = '##-#######';
+
+  if (canReplaceSymbols(template, einNums)) {
+    return replaceSymbolsWithChars(template, einNums);
+  }
+
+  return EMPTY_FIELD;
+}
+
 export function formatPercentage (value: null | number | string, decimalPoints = 2) {
   if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
 
