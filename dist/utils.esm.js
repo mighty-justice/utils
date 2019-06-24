@@ -22256,19 +22256,26 @@ function getOrDefault(value) {
 
   return value;
 }
-function formatSocialSecurityNumber(value) {
+
+function formatNumberFromTemplate(template, value) {
   if (!hasStringContent(value)) {
     return EMPTY_FIELD;
   }
 
-  var ssnNums = value && value.match(/\d/g) || [],
-      template = '###-##-####';
+  var numberValues = value && value.match(/\d/g) || [];
 
-  if (canReplaceSymbols(template, ssnNums)) {
-    return replaceSymbolsWithChars(template, ssnNums);
+  if (canReplaceSymbols(template, numberValues)) {
+    return replaceSymbolsWithChars(template, numberValues);
   }
 
   return EMPTY_FIELD;
+}
+
+function formatSocialSecurityNumber(value) {
+  return formatNumberFromTemplate('###-##-####', value);
+}
+function formatEmployerIdNumber(value) {
+  return formatNumberFromTemplate('##-#######', value);
 }
 function formatPercentage(value) {
   var decimalPoints = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
@@ -27209,4 +27216,4 @@ function isValidPastDate(value) {
   ;
 }
 
-export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, formatDateTime, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidDate, isValidPastDate };
+export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, formatDateTime, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatEmployerIdNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidDate, isValidPastDate };

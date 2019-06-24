@@ -22263,19 +22263,26 @@ function getOrDefault(value) {
 
   return value;
 }
-function formatSocialSecurityNumber(value) {
+
+function formatNumberFromTemplate(template, value) {
   if (!hasStringContent(value)) {
     return EMPTY_FIELD;
   }
 
-  var ssnNums = value && value.match(/\d/g) || [],
-      template = '###-##-####';
+  var numberValues = value && value.match(/\d/g) || [];
 
-  if (canReplaceSymbols(template, ssnNums)) {
-    return replaceSymbolsWithChars(template, ssnNums);
+  if (canReplaceSymbols(template, numberValues)) {
+    return replaceSymbolsWithChars(template, numberValues);
   }
 
   return EMPTY_FIELD;
+}
+
+function formatSocialSecurityNumber(value) {
+  return formatNumberFromTemplate('###-##-####', value);
+}
+function formatEmployerIdNumber(value) {
+  return formatNumberFromTemplate('##-#######', value);
 }
 function formatPercentage(value) {
   var decimalPoints = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
@@ -27237,6 +27244,7 @@ exports.formatDateTime = formatDateTime;
 exports.getNameOrDefault = getNameOrDefault;
 exports.getOrDefault = getOrDefault;
 exports.formatSocialSecurityNumber = formatSocialSecurityNumber;
+exports.formatEmployerIdNumber = formatEmployerIdNumber;
 exports.formatPercentage = formatPercentage;
 exports.formatMoney = formatMoney;
 exports.formatParagraphs = formatParagraphs;

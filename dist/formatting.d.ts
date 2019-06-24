@@ -16,6 +16,7 @@ export declare function getNameOrDefault(obj?: unknown, { field, defaultValue }?
 }): any;
 export declare function getOrDefault(value?: any): any;
 export declare function formatSocialSecurityNumber(value?: null | string): string;
+export declare function formatEmployerIdNumber(value?: null | string): string;
 export declare function formatPercentage(value: null | number | string, decimalPoints?: number): string;
 export declare function formatMoney(value?: null | number | string): string;
 export declare function formatParagraphs(value?: null | string): "--" | JSX.Element[];
