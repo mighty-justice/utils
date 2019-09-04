@@ -30,6 +30,48 @@ describe('formatting', () => {
     expect(util.splitName(null)).toEqual(['', '']);
   });
 
+  it('getInitials', () => {
+    // Empty inputs
+    expect(util.getInitials(null)).toEqual('');
+    expect(util.getInitials(undefined)).toEqual('');
+    expect(util.getInitials('                 ')).toEqual('');
+    expect(util.getInitials('')).toEqual('');
+
+    // Weird spacing
+    expect(util.getInitials(' Lorem Ipsum')).toEqual('LI');
+    expect(util.getInitials('Lorem                          ')).toEqual('L');
+    expect(util.getInitials('Lorem  Ipsum')).toEqual('LI');
+
+    // Anonymized from production examples
+    expect(util.getInitials('LI Dolor, SIT')).toEqual('LID');
+    expect(util.getInitials('Lorem & Ipsum DOLO')).toEqual('LID');
+    expect(util.getInitials('Lorem & Ipsum')).toEqual('LI');
+    expect(util.getInitials('Lorem + Ipsum Dolor at Sit')).toEqual('LID');
+    expect(util.getInitials('LOREM IPSUM & DOLOR SIT')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum ')).toEqual('LI');
+    expect(util.getInitials('Lorem Ipsum and Dolor')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum Do.')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum Dolor And Sit')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum Dolor Sit II')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum Dolor')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum Dolor, SIT')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum of Dolor')).toEqual('LID');
+    expect(util.getInitials('Lorem Ipsum')).toEqual('LI');
+    expect(util.getInitials('Lorem Ipsum')).toEqual('LI');
+    expect(util.getInitials('Lorem Ipsum, DOL')).toEqual('LI');
+    expect(util.getInitials('Lorem of Ipsum')).toBe('LI');
+    expect(util.getInitials('LOREM OF IPSUM')).toBe('LI');
+    expect(util.getInitials('Lorem')).toEqual('L');
+    expect(util.getInitials('Lorem. Ipsum Dolor S')).toEqual('LID');
+    expect(util.getInitials('LoremIpsum DOL')).toEqual('LID');
+    expect(util.getInitials('LoremIpsum Dolor')).toEqual('LID');
+    expect(util.getInitials('LoremIpsum Dolor, SIT')).toEqual('LID');
+    expect(util.getInitials('of Lorem Ipsum, DOL')).toEqual('LI');
+    expect(util.getInitials('The Lorem Ipsum Dolor')).toEqual('LID');
+    expect(util.getInitials('The Lorem')).toEqual('L');
+    expect(util.getInitials('The of Lorem I. Dolor, SA')).toEqual('LID');
+  });
+
   it('Correctly splits a comma separated list', () => {
     expect(util.splitCommaList('John, Smith')).toEqual(['John', 'Smith']);
     expect(util.splitCommaList('John,Smith,Sr.')).toEqual(['John', 'Smith', 'Sr.']);
