@@ -267,7 +267,7 @@ function _varToLabel (value: string) {
     const notFirstWord = index > 0
       , notOnlyWord = index + match.length !== title.length;
 
-    if (-
+    if (
       notFirstWord
       && notOnlyWord
       && _hasSmallWords(match)
