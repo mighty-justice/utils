@@ -39,6 +39,7 @@ describe('formatting', () => {
 
     // Weird spacing
     expect(util.getInitials(' Lorem Ipsum')).toEqual('LI');
+    expect(util.getInitials('Lorem Ipsum ')).toEqual('LI');
     expect(util.getInitials('Lorem                          ')).toEqual('L');
     expect(util.getInitials('Lorem  Ipsum')).toEqual('LI');
 
@@ -48,7 +49,6 @@ describe('formatting', () => {
     expect(util.getInitials('Lorem & Ipsum')).toEqual('LI');
     expect(util.getInitials('Lorem + Ipsum Dolor at Sit')).toEqual('LID');
     expect(util.getInitials('LOREM IPSUM & DOLOR SIT')).toEqual('LID');
-    expect(util.getInitials('Lorem Ipsum ')).toEqual('LI');
     expect(util.getInitials('Lorem Ipsum and Dolor')).toEqual('LID');
     expect(util.getInitials('Lorem Ipsum Do.')).toEqual('LID');
     expect(util.getInitials('Lorem Ipsum Dolor And Sit')).toEqual('LID');
@@ -56,7 +56,6 @@ describe('formatting', () => {
     expect(util.getInitials('Lorem Ipsum Dolor')).toEqual('LID');
     expect(util.getInitials('Lorem Ipsum Dolor, SIT')).toEqual('LID');
     expect(util.getInitials('Lorem Ipsum of Dolor')).toEqual('LID');
-    expect(util.getInitials('Lorem Ipsum')).toEqual('LI');
     expect(util.getInitials('Lorem Ipsum')).toEqual('LI');
     expect(util.getInitials('Lorem Ipsum, DOL')).toEqual('LI');
     expect(util.getInitials('Lorem of Ipsum')).toBe('LI');
