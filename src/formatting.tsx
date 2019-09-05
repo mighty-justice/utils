@@ -258,25 +258,23 @@ function _hasSmallWords (value: string) {
 }
 
 function _varToLabel (value: string) {
-  // Sourced significantly from https://github.com/gouch/to-title-case/blob/master/to-title-case.js
   const suffix = value.split('.').pop() || ''
     , formatted = startCase(suffix)
+    , wordArray = formatted.match(RE_WORDS) || []
+    , notOnlyWord = wordArray.length > 1
     ;
 
-  return formatted.replace(RE_WORDS, (match: string, index: number, title: string) => {
-    const notFirstWord = index > 0
-      , notOnlyWord = index + match.length !== title.length;
+  return wordArray
+    .map((match: string, index: number) => {
+      const notFirstWord = index > 0;
 
-    if (
-      notFirstWord
-      && notOnlyWord
-      && _hasSmallWords(match)
-    ) {
-      return match.toLowerCase();
-    }
+      if (notFirstWord && notOnlyWord && _hasSmallWords(match)) {
+        return match.toLowerCase();
+      }
 
-    return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
-  });
+      return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
+    })
+    .join(' ');
 }
 
 export const varToLabel: (str: string) => string = memoize(_varToLabel);
