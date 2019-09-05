@@ -4846,6 +4846,9 @@ var DATE_FORMATS = {
   date_value: 'YYYY-MM-DD'
 };
 var CENT_DECIMAL = new Decimal('100');
+var RE_ALPHA = /[^A-Za-z]/g;
+var RE_WORDS = /[A-Za-z0-9\u00C0-\u00FF\+]+[^\s-]*/g;
+var RE_SMALL_WORDS = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -22405,7 +22408,7 @@ function stripNonAlpha(str) {
     return '';
   }
 
-  return str.replace(/[^A-Za-z]/g, '');
+  return str.replace(RE_ALPHA, '');
 }
 function pluralize(baseWord, pluralSuffix, count) {
   return count === 1 ? baseWord : "".concat(baseWord).concat(pluralSuffix);
@@ -22432,25 +22435,51 @@ function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
-function _varToLabel(str) {
-  // Sourced significantly from https://github.com/gouch/to-title-case/blob/master/to-title-case.js
-  var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i,
-      suffix = str.split('.').pop() || '',
-      formatted = lodash.startCase(suffix);
-  return formatted.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function (match, index, title) {
-    var notFirstWord = index > 0,
-        notOnlyWord = index + match.length !== title.length,
-        hasSmallWords = match.search(smallWords) > -1;
+function _hasSmallWords(value) {
+  return value.search(RE_SMALL_WORDS) > -1;
+}
 
-    if (notFirstWord && notOnlyWord && hasSmallWords) {
+function _varToLabel(value) {
+  var suffix = value.split('.').pop() || '',
+      formatted = lodash.startCase(suffix),
+      wordArray = formatted.match(RE_WORDS) || [],
+      notOnlyWord = wordArray.length > 1;
+  return wordArray.map(function (match, index) {
+    var notFirstWord = index > 0;
+
+    if (notFirstWord && notOnlyWord && _hasSmallWords(match)) {
       return match.toLowerCase();
     }
 
     return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
-  });
+  }).join(' ');
 }
 
 var varToLabel = src(_varToLabel);
+function getInitials(value) {
+  if (!hasStringContent(value)) {
+    return '';
+  }
+
+  var MAX_CHARS = 3,
+      prefix = value.split(',')[0] || '',
+      formatted = lodash.startCase(prefix),
+      isValueAllCaps = formatted === lodash.upperCase(formatted),
+      wordArray = formatted.match(RE_WORDS) || [];
+  return wordArray.map(function (word) {
+    var isWordAllCaps = word === lodash.upperCase(word);
+
+    if (_hasSmallWords(word)) {
+      return '';
+    }
+
+    if (isWordAllCaps && !isValueAllCaps) {
+      return word;
+    }
+
+    return word.charAt(0).toUpperCase();
+  }).join('').substring(0, MAX_CHARS);
+}
 function toKey(dict) {
   var dictSorted = lodash.sortBy(lodash.map(dict, function (value, key) {
     return [key, value];
@@ -27226,6 +27255,9 @@ function isValidPastDate(value) {
 exports.EMPTY_FIELD = EMPTY_FIELD;
 exports.DATE_FORMATS = DATE_FORMATS;
 exports.CENT_DECIMAL = CENT_DECIMAL;
+exports.RE_ALPHA = RE_ALPHA;
+exports.RE_WORDS = RE_WORDS;
+exports.RE_SMALL_WORDS = RE_SMALL_WORDS;
 exports.createDisabledContainer = createDisabledContainer;
 exports.createGuardedContainer = createGuardedContainer;
 exports.dateToday = dateToday;
@@ -27261,6 +27293,7 @@ exports.preserveNewLines = preserveNewLines;
 exports.parseAndPreserveNewlines = parseAndPreserveNewlines;
 exports.getDisplayName = getDisplayName;
 exports.varToLabel = varToLabel;
+exports.getInitials = getInitials;
 exports.toKey = toKey;
 exports.formatAddress = formatAddress;
 exports.formatAddressMultiline = formatAddressMultiline;

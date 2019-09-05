@@ -6,3 +6,6 @@ export declare const DATE_FORMATS: {
     date_value: string;
 };
 export declare const CENT_DECIMAL: Decimal;
+export declare const RE_ALPHA: RegExp;
+export declare const RE_WORDS: RegExp;
+export declare const RE_SMALL_WORDS: RegExp;

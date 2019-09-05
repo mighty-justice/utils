@@ -35,6 +35,7 @@ export declare function preserveNewLines(body: string): string;
 export declare function parseAndPreserveNewlines(body?: string): any;
 export declare function getDisplayName(component: any): (string | undefined);
 export declare const varToLabel: (str: string) => string;
+export declare function getInitials(value?: string | null): string;
 export declare function toKey(dict: {
     [key: string]: any;
 }): string;

@@ -3,7 +3,7 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import util from 'util';
 import events from 'events';
-import { isString, isNumber, has, result, get, times as times$2, isBoolean, escape, sortBy, map as map$1, reject, mapValues, startCase } from 'lodash';
+import { isString, isNumber, has, result, get, times as times$2, isBoolean, escape, startCase, upperCase, sortBy, map as map$1, reject, mapValues } from 'lodash';
 
 /*
  *  decimal.js v10.1.1
@@ -4839,6 +4839,9 @@ var DATE_FORMATS = {
   date_value: 'YYYY-MM-DD'
 };
 var CENT_DECIMAL = new Decimal('100');
+var RE_ALPHA = /[^A-Za-z]/g;
+var RE_WORDS = /[A-Za-z0-9\u00C0-\u00FF\+]+[^\s-]*/g;
+var RE_SMALL_WORDS = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -22398,7 +22401,7 @@ function stripNonAlpha(str) {
     return '';
   }
 
-  return str.replace(/[^A-Za-z]/g, '');
+  return str.replace(RE_ALPHA, '');
 }
 function pluralize(baseWord, pluralSuffix, count) {
   return count === 1 ? baseWord : "".concat(baseWord).concat(pluralSuffix);
@@ -22425,25 +22428,51 @@ function getDisplayName(component) {
   return component.displayName || component.name || 'Component';
 }
 
-function _varToLabel(str) {
-  // Sourced significantly from https://github.com/gouch/to-title-case/blob/master/to-title-case.js
-  var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i,
-      suffix = str.split('.').pop() || '',
-      formatted = startCase(suffix);
-  return formatted.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function (match, index, title) {
-    var notFirstWord = index > 0,
-        notOnlyWord = index + match.length !== title.length,
-        hasSmallWords = match.search(smallWords) > -1;
+function _hasSmallWords(value) {
+  return value.search(RE_SMALL_WORDS) > -1;
+}
 
-    if (notFirstWord && notOnlyWord && hasSmallWords) {
+function _varToLabel(value) {
+  var suffix = value.split('.').pop() || '',
+      formatted = startCase(suffix),
+      wordArray = formatted.match(RE_WORDS) || [],
+      notOnlyWord = wordArray.length > 1;
+  return wordArray.map(function (match, index) {
+    var notFirstWord = index > 0;
+
+    if (notFirstWord && notOnlyWord && _hasSmallWords(match)) {
       return match.toLowerCase();
     }
 
     return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
-  });
+  }).join(' ');
 }
 
 var varToLabel = src(_varToLabel);
+function getInitials(value) {
+  if (!hasStringContent(value)) {
+    return '';
+  }
+
+  var MAX_CHARS = 3,
+      prefix = value.split(',')[0] || '',
+      formatted = startCase(prefix),
+      isValueAllCaps = formatted === upperCase(formatted),
+      wordArray = formatted.match(RE_WORDS) || [];
+  return wordArray.map(function (word) {
+    var isWordAllCaps = word === upperCase(word);
+
+    if (_hasSmallWords(word)) {
+      return '';
+    }
+
+    if (isWordAllCaps && !isValueAllCaps) {
+      return word;
+    }
+
+    return word.charAt(0).toUpperCase();
+  }).join('').substring(0, MAX_CHARS);
+}
 function toKey(dict) {
   var dictSorted = sortBy(map$1(dict, function (value, key) {
     return [key, value];
@@ -27216,4 +27245,4 @@ function isValidPastDate(value) {
   ;
 }
 
-export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, formatDateTime, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatEmployerIdNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidDate, isValidPastDate };
+export { EMPTY_FIELD, DATE_FORMATS, CENT_DECIMAL, RE_ALPHA, RE_WORDS, RE_SMALL_WORDS, createDisabledContainer, createGuardedContainer, dateToday, isFutureDate, inferCentury, canReplaceSymbols, replaceSymbolsWithChars, hasStringContent, hasStringOrNumberContent, splitName, splitCommaList, formatFullName, formatPhoneNumber, formatDate, formatDateTime, getNameOrDefault, getOrDefault, formatSocialSecurityNumber, formatEmployerIdNumber, formatPercentage, formatMoney, formatParagraphs, formatCommaSeparatedNumber, formatDelimitedList, mapBooleanToText, formatMoneyInput, formatDuration, formatWebsite, stripNonAlpha, pluralize, getType, preserveNewLines, parseAndPreserveNewlines, getDisplayName, varToLabel, getInitials, toKey, formatAddress, formatAddressMultiline, insertIf, getPercentValue, getPercentDisplay, isValidDate, isValidPastDate };
