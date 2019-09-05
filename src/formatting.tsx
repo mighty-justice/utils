@@ -291,11 +291,10 @@ export function getInitials (value?: string | null) {
     , wordArray = formatted.match(RE_WORDS) || [];
 
   return wordArray
-    .map((word: string, _index: number, all: string[]) => {
-      const notOnlyWord = !!all.length
-        , isWordAllCaps = word === upperCase(word);
+    .map((word: string) => {
+      const isWordAllCaps = word === upperCase(word);
 
-      if (notOnlyWord && _hasSmallWords(word)) { return ''; }
+      if (_hasSmallWords(word)) { return ''; }
       if (isWordAllCaps && !isValueAllCaps) { return word; }
       return word.charAt(0).toUpperCase();
     })
