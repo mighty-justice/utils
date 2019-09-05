@@ -19,9 +19,10 @@ import {
   sortBy,
   startCase,
   times,
+  upperCase,
 } from 'lodash';
 
-import { DATE_FORMATS, EMPTY_FIELD } from './constants';
+import { DATE_FORMATS, EMPTY_FIELD, RE_ALPHA, RE_SMALL_WORDS, RE_WORDS } from './constants';
 import { IAddress } from './interfaces';
 
 export function canReplaceSymbols (template: string, chars: string[]): boolean {
@@ -226,7 +227,7 @@ export function formatWebsite (website: string | undefined, text?: string): (str
 
 export function stripNonAlpha (str?: string | null) {
   if (!hasStringContent(str)) { return ''; }
-  return str.replace(/[^A-Za-z]/g, '');
+  return str.replace(RE_ALPHA, '');
 }
 
 export function pluralize (baseWord: string, pluralSuffix: string, count: number) {
@@ -252,32 +253,52 @@ export function getDisplayName (component: any): (string | undefined) {
   return component.displayName || component.name || 'Component';
 }
 
-function _varToLabel (str: string) {
-  // Sourced significantly from https://github.com/gouch/to-title-case/blob/master/to-title-case.js
-  const smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i
-    , suffix = str.split('.').pop() || ''
+function _hasSmallWords (value: string) {
+  return value.search(RE_SMALL_WORDS) > -1;
+}
+
+function _varToLabel (value: string) {
+  const suffix = value.split('.').pop() || ''
     , formatted = startCase(suffix)
+    , wordArray = formatted.match(RE_WORDS) || []
+    , notOnlyWord = wordArray.length > 1
     ;
 
-  return formatted.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, (match: string, index: number, title: string) => {
-    const notFirstWord = index > 0
-      , notOnlyWord = index + match.length !== title.length
-      , hasSmallWords = match.search(smallWords) > -1
-      ;
+  return wordArray
+    .map((match: string, index: number) => {
+      const notFirstWord = index > 0;
 
-    if (
-      notFirstWord
-      && notOnlyWord
-      && hasSmallWords
-    ) {
-      return match.toLowerCase();
-    }
+      if (notFirstWord && notOnlyWord && _hasSmallWords(match)) {
+        return match.toLowerCase();
+      }
 
-    return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
-  });
+      return match.charAt(0).toUpperCase() + match.substr(1).toLowerCase();
+    })
+    .join(' ');
 }
 
 export const varToLabel: (str: string) => string = memoize(_varToLabel);
+
+export function getInitials (value?: string | null) {
+  if (!hasStringContent(value)) { return ''; }
+
+  const MAX_CHARS = 3
+    , prefix = value.split(',')[0] || ''
+    , formatted = startCase(prefix)
+    , isValueAllCaps = formatted === upperCase(formatted)
+    , wordArray = formatted.match(RE_WORDS) || [];
+
+  return wordArray
+    .map((word: string) => {
+      const isWordAllCaps = word === upperCase(word);
+
+      if (_hasSmallWords(word)) { return ''; }
+      if (isWordAllCaps && !isValueAllCaps) { return word; }
+      return word.charAt(0).toUpperCase();
+    })
+    .join('')
+    .substring(0, MAX_CHARS);
+}
 
 export function toKey (dict: { [key: string]: any }) {
   const dictSorted = sortBy(map(dict, (value: any, key: string) => [key, value]))
