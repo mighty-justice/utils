@@ -109,7 +109,7 @@
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^4.0.1",
     "rollup-plugin-peer-deps-external": "^2.2.0",
-    "source-map-explorer": "^1.7.0",
+    "source-map-explorer": "^2.0.1",
     "tslint": "^5.13.1",
     "typescript": "^3.3.3333"
   },
