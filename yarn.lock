@@ -824,9 +824,9 @@
     "@types/jest-diff" "*"
 
 "@types/lodash@^4.14.122":
-  version "4.14.122"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.122.tgz#3e31394c38cf1e5949fb54c1192cbc406f152c6c"
-  integrity sha512-9IdED8wU93ty8gP06ninox+42SBSJHp2IAamsSYMUY76mshRTeUsid/gtbl8ovnOwy8im41ib4cxTiIYMXGKew==
+  version "4.14.138"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.138.tgz#34f52640d7358230308344e579c15b378d91989e"
+  integrity sha512-A4uJgHz4hakwNBdHNPdxOTkYmXNgmUAKLbXZ7PKGslgeV0Mb8P3BlbYfPovExek1qnod4pDfRbxuzcVs3dlFLg==
 
 "@types/node@*", "@types/node@^11.9.5":
   version "11.10.4"
