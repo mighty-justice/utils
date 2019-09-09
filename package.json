@@ -96,7 +96,7 @@
     "jest": "^24.1.0",
     "jest-environment-jsdom": "^24.0.0",
     "lodash": "4.17.15",
-    "mobx": "^4.9.4",
+    "mobx": "^5.13.0",
     "mobx-react": "^6.1.3",
     "np": "^4.0.2",
     "numeral": "^2.0.6",
