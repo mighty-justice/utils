@@ -22,7 +22,7 @@ describe('validation', () => {
       expect(utilFn('1989-11-22')).toBe(true);
       expect(utilFn('1998-01-01')).toBe(true);
 
-      expect(utilFn('2020-01-01')).toBe(utilKey === 'isValidDate');
+      expect(utilFn('2040-01-01')).toBe(utilKey === 'isValidDate');
     });
   })
 });

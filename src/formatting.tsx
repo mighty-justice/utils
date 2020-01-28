@@ -150,7 +150,7 @@ export function formatEmployerIdNumber (value?: null | string) {
   return formatNumberFromTemplate('##-#######', value);
 }
 
-export function formatPercentage (value: null | number | string, decimalPoints = 2) {
+export function formatPercentage (value?: null | number | string, decimalPoints = 2) {
   if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
 
   const zeros = times(decimalPoints, () => '0').join('')
@@ -217,7 +217,7 @@ export function formatDuration (iso8601?: null | string) {
   return unitCountsHuman.map(([unit, count]) => `${count} ${unit}`).join(', ');
 }
 
-export function formatWebsite (website: string | undefined, text?: string): (string | JSX.Element) {
+export function formatWebsite (website?: string | null, text?: string): (string | JSX.Element) {
   if (!hasStringContent(website)) { return EMPTY_FIELD; }
 
   return (
