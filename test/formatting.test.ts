@@ -2,8 +2,37 @@
 import * as util from '../src';
 import { EMPTY_FIELD } from '../src';
 
+const EMPTY_VALUES = [
+  '             ',
+  ' ',
+  '',
+  null,
+  undefined,
+];
+
 describe('formatting', () => {
-  it('Correctly converts a variable name to a form label', () => {
+  [
+    util.formatDate,
+    util.formatDateTime,
+    util.formatDuration,
+    util.formatEmployerIdNumber,
+    util.formatMoney,
+    util.formatParagraphs,
+    util.formatPercentage,
+    util.formatPhoneNumber,
+    util.formatSocialSecurityNumber,
+    util.formatWebsite,
+    util.getNameOrDefault,
+    util.getOrDefault,
+  ].forEach(formatUtil => {
+    it(`${formatUtil.name}: Handles null, undefined, and empty string`, () => {
+      EMPTY_VALUES.forEach(emptyValue => {
+        expect(formatUtil(emptyValue)).toBe('--');
+      });
+    });
+  });
+
+  it('varToLabel: Converts any string to a human-friendly label', () => {
     expect(util.varToLabel('')).toBe('');
     expect(util.varToLabel('case-type')).toBe('Case Type');
     expect(util.varToLabel('case_type')).toBe('Case Type');
@@ -14,7 +43,11 @@ describe('formatting', () => {
     expect(util.varToLabel('stateOfIncident')).toBe('State of Incident');
   });
 
-  it('Correctly splits a name', () => {
+  it('splitName: Splits name string into [first, last] array', () => {
+    EMPTY_VALUES.forEach(emptyValue => {
+      expect(util.splitName(emptyValue)).toEqual(['', '']);
+    });
+
     expect(util.splitName('John Smith')).toEqual(['John', 'Smith']);
     expect(util.splitName('John Smith Sr.')).toEqual(['John', 'Smith Sr.']);
     expect(util.splitName('Ms. Jane Smithson V')).toEqual(['Ms.', 'Jane Smithson V']);
@@ -23,19 +56,14 @@ describe('formatting', () => {
     expect(util.splitName('John Smith ')).toEqual(['John', 'Smith']);
     expect(util.splitName('John  Smith')).toEqual(['John', 'Smith']);
     expect(util.splitName('John')).toEqual(['John', '']);
-    expect(util.splitName('')).toEqual(['', '']);
     expect(util.splitName('John                          ')).toEqual(['John', '']);
-    expect(util.splitName('                 ')).toEqual(['', '']);
-    expect(util.splitName(undefined)).toEqual(['', '']);
-    expect(util.splitName(null)).toEqual(['', '']);
   });
 
   it('getInitials', () => {
     // Empty inputs
-    expect(util.getInitials(null)).toEqual('');
-    expect(util.getInitials(undefined)).toEqual('');
-    expect(util.getInitials('                 ')).toEqual('');
-    expect(util.getInitials('')).toEqual('');
+    EMPTY_VALUES.forEach(emptyValue => {
+      expect(util.getInitials(emptyValue)).toBe('');
+    });
 
     // Weird spacing
     expect(util.getInitials(' Lorem Ipsum')).toEqual('LI');
@@ -71,7 +99,11 @@ describe('formatting', () => {
     expect(util.getInitials('The of Lorem I. Dolor, SA')).toEqual('LID');
   });
 
-  it('Correctly splits a comma separated list', () => {
+  it('splitCommaList: Splits a comma separated list', () => {
+    EMPTY_VALUES.forEach(emptyValue => {
+      expect(util.splitCommaList(emptyValue)).toEqual([]);
+    });
+
     expect(util.splitCommaList('John, Smith')).toEqual(['John', 'Smith']);
     expect(util.splitCommaList('John,Smith,Sr.')).toEqual(['John', 'Smith', 'Sr.']);
     expect(util.splitCommaList('Ms., Jane Smithson V')).toEqual(['Ms.', 'Jane Smithson V']);
@@ -80,23 +112,17 @@ describe('formatting', () => {
     expect(util.splitCommaList('John Smith, ')).toEqual(['John Smith']);
     expect(util.splitCommaList('John Smith')).toEqual(['John Smith']);
     expect(util.splitCommaList('John,,')).toEqual(['John']);
-    expect(util.splitCommaList('')).toEqual([]);
     expect(util.splitCommaList('John                          ')).toEqual(['John']);
-    expect(util.splitCommaList('                 ')).toEqual([]);
-    expect(util.splitCommaList(undefined)).toEqual([]);
-    expect(util.splitCommaList(null)).toEqual([]);
   });
 
-  it('Correctly formats a full name', () => {
+  it('formatFullName', () => {
     expect(util.formatFullName('John', '')).toBe('John');
     expect(util.formatFullName('John', 'Smith')).toBe('John Smith');
     expect(util.formatFullName('', 'Smith Sr.')).toBe('Smith Sr.');
     expect(util.formatFullName('John', 'Smith Sr.')).toBe('John Smith Sr.');
   });
 
-  it('Correctly formats a phone number', () => {
-    expect(util.formatPhoneNumber(null)).toBe('--');
-    expect(util.formatPhoneNumber(undefined)).toBe('--');
+  it('formatPhoneNumber', () => {
     expect(util.formatPhoneNumber('5')).toBe('5');
     expect(util.formatPhoneNumber('8675309')).toBe('867-5309');
     expect(util.formatPhoneNumber('5558675309')).toBe('(555) 867-5309');
@@ -110,7 +136,11 @@ describe('formatting', () => {
     expect(util.formatPhoneNumber('125558675309')).toBe('+12 (555) 867-5309');
   });
 
-  it('Correctly formats a name when passed an object', () => {
+  it('getNameOrDefault', () => {
+    EMPTY_VALUES.forEach(emptyValue => {
+      expect(util.getNameOrDefault(emptyValue, {defaultValue: 'custom'})).toBe('custom');
+    });
+
     expect(util.getNameOrDefault({first_name: 'John', last_name: 'Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({name: 'John Smith'})).toBe('John Smith');
     expect(util.getNameOrDefault({customName: 'John Smith'}, {field: 'customName'})).toBe('John Smith');
@@ -118,36 +148,14 @@ describe('formatting', () => {
     expect(util.getNameOrDefault({first_name: 'John'})).toBe('John');
   });
 
-  it('Correctly displays default value when a falsy value passed', () => {
-    expect(util.getNameOrDefault(null)).toBe('--');
-    expect(util.getNameOrDefault(undefined)).toBe('--');
-    expect(util.getNameOrDefault('')).toBe('--');
-  });
-
-  it('Correctly displays custom default value when a falsy value passed', () => {
-    expect(util.getNameOrDefault(null, {defaultValue: 'custom'})).toBe('custom');
-    expect(util.getNameOrDefault(undefined, {defaultValue: 'custom'})).toBe('custom');
-    expect(util.getNameOrDefault('', {defaultValue: 'custom'})).toBe('custom');
-  });
-
-  it('Correctly displays a value when passed one', () => {
+  it('getOrDefault', () => {
     expect(util.getOrDefault('Hello')).toBe('Hello');
     expect(util.getOrDefault('Hello                     ')).toBe('Hello');
     expect(util.getOrDefault(123)).toBe(123);
     expect(util.getOrDefault(0)).toBe(0);
   });
 
-  it('Correctly displays default value when an empty value is passed', () => {
-    expect(util.getOrDefault(null)).toBe('--');
-    expect(util.getOrDefault(undefined)).toBe('--');
-    expect(util.getOrDefault('')).toBe('--');
-    expect(util.getOrDefault(' ')).toBe('--');
-    expect(util.getOrDefault('                              ')).toBe('--');
-  });
-
-  it('Correctly formats a social security number', () => {
-    expect(util.formatSocialSecurityNumber(null)).toBe('--');
-    expect(util.formatSocialSecurityNumber(undefined)).toBe('--');
+  it('formatSocialSecurityNumber', () => {
     expect(util.formatSocialSecurityNumber('123456789')).toBe('123-45-6789');
     expect(util.formatSocialSecurityNumber('12-345-6789')).toBe('123-45-6789');
     expect(util.formatSocialSecurityNumber('12345-6789')).toBe('123-45-6789');
@@ -155,9 +163,7 @@ describe('formatting', () => {
     expect(util.formatSocialSecurityNumber('12-34-56-78-9')).toBe('123-45-6789');
   });
 
-  it('Correctly formats an employer id number', () => {
-    expect(util.formatEmployerIdNumber(null)).toBe('--');
-    expect(util.formatEmployerIdNumber(undefined)).toBe('--');
+  it('formatEmployerIdNumber', () => {
     expect(util.formatEmployerIdNumber('123456789')).toBe('12-3456789');
     expect(util.formatEmployerIdNumber('12-345-6789')).toBe('12-3456789');
     expect(util.formatEmployerIdNumber('12345-6789')).toBe('12-3456789');
@@ -165,11 +171,10 @@ describe('formatting', () => {
     expect(util.formatEmployerIdNumber('12-34-56-78-9')).toBe('12-3456789');
   });
 
-  it('Correctly formats percentages', () => {
+  it('formatPercentage', () => {
     expect(util.formatPercentage(0.5)).toBe('50.00%');
     expect(util.formatPercentage(1.5)).toBe('150.00%');
     expect(util.formatPercentage(1.0)).toBe('100.00%');
-    expect(util.formatPercentage(null)).toBe('--');
     expect(util.formatPercentage(0)).toBe('0.00%');
     expect(util.formatPercentage(0.0395)).toBe('3.95%');
     expect(util.formatPercentage(0.005)).toBe('0.50%');
@@ -178,35 +183,31 @@ describe('formatting', () => {
     expect(util.formatPercentage(0.12345, 10)).toBe('12.3450000000%');
   });
 
-  it('Correctly formats money', () => {
+  it('formatMoney', () => {
     expect(util.formatMoney(0.5)).toBe('$0.50');
     expect(util.formatMoney(1.55)).toBe('$1.55');
     expect(util.formatMoney(1555333.0)).toBe('$1,555,333.00');
-    expect(util.formatMoney(null)).toBe('--');
     expect(util.formatMoney(0)).toBe('$0.00');
   });
 
-  it('Correctly formats a date', () => {
-    expect(util.formatDate(undefined)).toBe('--');
-    expect(util.formatDate(null)).toBe('--');
+  it('formatDate', () => {
     expect(util.formatDate('2016-10-03')).toBe('10/03/16');
   });
 
-  it('Correctly formats datetimes', () => {
-    expect(util.formatDateTime(undefined)).toBe('--');
-    expect(util.formatDateTime(null)).toBe('--');
+  it('formatDateTime', () => {
     expect(util.formatDateTime('2008-09-22T13:57:31.2311892')).toBe('09/22/08 @ 1:57PM');
   });
 
-  it('Correctly maps booleans to yes and no', () => {
+  it('mapBooleanToText: Maps booleans to yes and no', () => {
     expect(util.mapBooleanToText(true)).toBe('Yes');
     expect(util.mapBooleanToText(false)).toBe('No');
+    expect(util.mapBooleanToText(null)).toBe('--');
     expect(util.mapBooleanToText(undefined)).toBe('--');
     expect(util.mapBooleanToText(undefined, {mapUndefinedToNo: false})).toBe('--');
     expect(util.mapBooleanToText(undefined, {mapUndefinedToNo: true})).toBe('No');
   });
 
-  it('Correctly gets value from a money input with commas', () => {
+  it('formatMoneyInput: Gets value from a money input with commas', () => {
     expect(util.formatMoneyInput('1,222.00')).toBe(1222);
     expect(util.formatMoneyInput(null)).toBe(null);
     expect(util.formatMoneyInput(undefined)).toBe(undefined);
@@ -216,10 +217,7 @@ describe('formatting', () => {
     expect(util.formatMoneyInput('123,456,789.99')).toBe(123456789.99);
   });
 
-  it('Correctly formats iso8601 durations', () => {
-    expect(util.formatDuration(undefined)).toBe('--');
-    expect(util.formatDuration(null)).toBe('--');
-    expect(util.formatDuration('')).toBe('--');
+  it('formatDuration: Formats iso8601 durations', () => {
     expect(util.formatDuration('P1Y')).toBe('1 year');
     expect(util.formatDuration('P3Y')).toBe('3 years');
     expect(util.formatDuration('P6M')).toBe('6 months');
@@ -227,31 +225,29 @@ describe('formatting', () => {
     expect(util.formatDuration('P1Y2M4DT20H44M12.67S')).toBe('1 year, 2 months, 4 days, 20 hours, 44 minutes, 12.67 seconds');
   });
 
-  it('Correctly formats paragraphs', () => {
-    expect(util.formatParagraphs(undefined)).toBe('--');
-    expect(util.formatParagraphs(null)).toBe('--');
-    expect(util.formatParagraphs('')).toBe('--');
+  it('formatParagraphs', () => {
     expect(util.formatParagraphs('Hello World').length).toBe(1);
     expect(util.formatParagraphs('Hello\nWorld').length).toBe(2);
   });
 
-  it('Correctly strips non alpha charachters', () => {
-    expect(util.stripNonAlpha(undefined)).toBe('');
-    expect(util.stripNonAlpha(null)).toBe('');
-    expect(util.stripNonAlpha('')).toBe('');
+  it('stripNonAlpha: Strips non alpha charachters from strings', () => {
+    EMPTY_VALUES.forEach(emptyValue => {
+      expect(util.stripNonAlpha(emptyValue)).toBe('');
+    });
+
     expect(util.stripNonAlpha('Hello World')).toBe('HelloWorld');
     expect(util.stripNonAlpha('Hello\nWorld')).toBe('HelloWorld');
     expect(util.stripNonAlpha('Hello234World')).toBe('HelloWorld');
     expect(util.stripNonAlpha('Hello234World      ')).toBe('HelloWorld');
   });
 
-  it('Correctly pluralizes words based on count', () => {
+  it('pluralize: Pluralizes words based on count', () => {
     expect(util.pluralize('case', 's', 0)).toBe('cases');
     expect(util.pluralize('case', 's', 1)).toBe('case');
     expect(util.pluralize('case', 's', 100)).toBe('cases');
   });
 
-  it('Correctly formats a delimited list when given an array', () => {
+  it('formatDelimitedList: Formats an array as a comma delimited list', () => {
     expect(util.formatDelimitedList([])).toBe('--');
     expect(util.formatDelimitedList(['a', 'b', 'c'])).toBe('a, b, c');
     expect(util.formatDelimitedList(['a', 'b', 'c'], '//')).toBe('a//b//c');
@@ -262,18 +258,20 @@ describe('formatting', () => {
     expect(util.formatDelimitedList(undefined)).toBe('--');
   });
 
-  it('Correctly formats a comma-separated number', () => {
+  it('formatCommaSeparatedNumber', () => {
+    EMPTY_VALUES.forEach(emptyValue => {
+      expect(util.formatCommaSeparatedNumber(emptyValue)).toBe('--');
+    });
+
     expect(util.formatCommaSeparatedNumber(4005)).toBe('4,005');
     expect(util.formatCommaSeparatedNumber(0)).toBe('0');
     expect(util.formatCommaSeparatedNumber(400)).toBe('400');
     expect(util.formatCommaSeparatedNumber(40005)).toBe('40,005');
     expect(util.formatCommaSeparatedNumber(400005)).toBe('400,005');
     expect(util.formatCommaSeparatedNumber(4000005)).toBe('4,000,005');
-    expect(util.formatCommaSeparatedNumber(null)).toBe('--');
-    expect(util.formatCommaSeparatedNumber(undefined)).toBe('--');
   });
 
-  it('Correctly formats a type string', () => {
+  it('getType: Formats a model type string', () => {
     expect(util.getType('attorneys.attorney')).toBe('attorney');
     expect(util.getType('attorney')).toBe('attorney');
     expect(util.getType(undefined)).toBe(undefined);
@@ -281,20 +279,18 @@ describe('formatting', () => {
     expect(util.getType('')).toBe('');
   });
 
-  it('Correctly preserves newlines in a note', () => {
-    const parsedCaseNote = util.parseAndPreserveNewlines('hello\n\n\nhello');
-    expect(parsedCaseNote[0]).toBe('hello');
-    expect(parsedCaseNote[1].type).toBe('br');
-    expect(parsedCaseNote[2].type).toBe('br');
-    expect(parsedCaseNote[3].type).toBe('br');
-    expect(parsedCaseNote[4]).toBe('hello');
+  it('parseAndPreserveNewlines: Converts strings with newlines to HTML', () => {
+    const parsedHtml = util.parseAndPreserveNewlines('hello\n\n\nhello') as JSX.Element[];
+    expect(parsedHtml[0]).toBe('hello');
+    expect(parsedHtml[1].type).toBe('br');
+    expect(parsedHtml[2].type).toBe('br');
+    expect(parsedHtml[3].type).toBe('br');
+    expect(parsedHtml[4]).toBe('hello');
   });
 
-  it('Correctly formats a website', () => {
+  it('formattedWebsite', () => {
     const website = 'https://www.mighty.com'
       , innerText = 'innerText';
-
-    expect(util.formatWebsite(undefined)).toBe('--');
 
     const formattedWebsite = util.formatWebsite(website) as JSX.Element;
     expect(formattedWebsite.props.href).toBe(website);
@@ -305,7 +301,7 @@ describe('formatting', () => {
     expect(formattedWebsiteWithText.props.children).toBe(innerText);
   });
 
-  it('Correctly formats an address', () => {
+  it('formatAddress: Format address as single-line string', () => {
     expect(util.formatAddress(null)).toBe('--, --, -- --');
     expect(util.formatAddress(
       {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001'}),
@@ -326,19 +322,19 @@ describe('formatting', () => {
       {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: ''}),
     ).toBe('123 Fake St Apt 1-D, New York, NY --');
 
-    const parsedAddressMultilineNull = util.formatAddressMultiline(null);
+    const parsedAddressMultilineNull = util.formatAddressMultiline(null) as JSX.Element[];
     expect(parsedAddressMultilineNull[0]).toBe(EMPTY_FIELD);
     expect(parsedAddressMultilineNull[1].type).toBe('br');
     expect(parsedAddressMultilineNull[2]).toBe('--, -- --');
 
     const parsedAddressMultilineFull = util.formatAddressMultiline(
-      {address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'});
+      {address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'}) as JSX.Element[];
     expect(parsedAddressMultilineFull[0]).toBe('123 Fake St');
     expect(parsedAddressMultilineFull[1].type).toBe('br');
     expect(parsedAddressMultilineFull[2]).toBe('New York, NY 10001');
   });
 
-  it('Correctly formats an object as a URL param string', () => {
+  it('toKey: Deterministically formats an object as a URL param string', () => {
     expect(util.toKey({})).toBe('');
 
     // String or number
