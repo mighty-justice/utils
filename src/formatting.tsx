@@ -73,7 +73,7 @@ export function formatPhoneNumber (input?: string | null) {
   if (!hasStringContent(input)) { return EMPTY_FIELD; }
 
   const phoneNumbers = input.match(/\d/g) || []
-    , phoneNotNumbers = input.match(/[^0-9\-()]/g) || []
+    , phoneNotNumbers = input.match(/[^0-9\-(). ]/g) || []
     , PHONE_FORMATS: string[] = [
       '###-####',
       '(###) ###-####',
