@@ -123,17 +123,35 @@ describe('formatting', () => {
   });
 
   it('formatPhoneNumber', () => {
+    // Nonsense should just return
+    expect(util.formatPhoneNumber('+2111 (555)-867-5309')).toBe('+2111 (555)-867-5309');
+    expect(util.formatPhoneNumber('-------')).toBe('-------');
     expect(util.formatPhoneNumber('5')).toBe('5');
+    expect(util.formatPhoneNumber('867-5309 ext. 4')).toBe('867-5309 ext. 4');
+    expect(util.formatPhoneNumber('1867-5309')).toBe('1867-5309');
+    expect(util.formatPhoneNumber('86753098675309867530')).toBe('86753098675309867530');
+    expect(util.formatPhoneNumber('Call main office')).toBe('Call main office');
+
+    // Digits
+    expect(util.formatPhoneNumber('5309')).toBe('5309');
     expect(util.formatPhoneNumber('8675309')).toBe('867-5309');
     expect(util.formatPhoneNumber('5558675309')).toBe('(555) 867-5309');
+    expect(util.formatPhoneNumber('15558675309')).toBe('+1 (555) 867-5309');
+    expect(util.formatPhoneNumber('125558675309')).toBe('+12 (555) 867-5309');
+
+    // Other characters
+    expect(util.formatPhoneNumber(' (555) 867-5309')).toBe('(555) 867-5309');
+    expect(util.formatPhoneNumber('(555) 867-5309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('(555)-867-5309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('(555)-8675309')).toBe('(555) 867-5309');
+    expect(util.formatPhoneNumber('(555)8675309')).toBe('(555) 867-5309');
+    expect(util.formatPhoneNumber('---8675309')).toBe('867-5309');
+    expect(util.formatPhoneNumber('-8675309')).toBe('867-5309');
+    expect(util.formatPhoneNumber('86-5309')).toBe('86-5309');
+    expect(util.formatPhoneNumber('555 867 5309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('555-867-5309')).toBe('(555) 867-5309');
+    expect(util.formatPhoneNumber('555.867.5309')).toBe('(555) 867-5309');
     expect(util.formatPhoneNumber('867-5309')).toBe('867-5309');
-    expect(util.formatPhoneNumber('867-5309 ext. 4')).toBe('867-5309 ext. 4');
-    expect(util.formatPhoneNumber('Call main office')).toBe('Call main office');
-    expect(util.formatPhoneNumber('+2111 (555)-867-5309')).toBe('+2111 (555)-867-5309');
-    expect(util.formatPhoneNumber('125558675309')).toBe('+12 (555) 867-5309');
   });
 
   it('getNameOrDefault', () => {
