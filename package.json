@@ -93,7 +93,7 @@
     "coveralls": "^3.0.3",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.10.0",
-    "jest": "^24.1.0",
+    "jest": "^25.1.0",
     "jest-environment-jsdom": "^25.1.0",
     "lodash": "4.17.15",
     "mobx": "^5.13.0",
