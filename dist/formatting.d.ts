@@ -17,7 +17,7 @@ export declare function getNameOrDefault(obj?: unknown, { field, defaultValue }?
 export declare function getOrDefault(value?: any): any;
 export declare function formatSocialSecurityNumber(value?: null | string): string;
 export declare function formatEmployerIdNumber(value?: null | string): string;
-export declare function formatPercentage(value: null | number | string, decimalPoints?: number): string;
+export declare function formatPercentage(value?: null | number | string, decimalPoints?: number): string;
 export declare function formatMoney(value?: null | number | string): string;
 export declare function formatParagraphs(value?: null | string): "--" | JSX.Element[];
 export declare function formatCommaSeparatedNumber(value?: null | number | string): string;
@@ -27,7 +27,7 @@ export declare function mapBooleanToText(bool?: boolean | null, { mapUndefinedTo
 }): "--" | "Yes" | "No";
 export declare function formatMoneyInput(value?: null | number | string): number | null | undefined;
 export declare function formatDuration(iso8601?: null | string): string;
-export declare function formatWebsite(website: string | undefined, text?: string): (string | JSX.Element);
+export declare function formatWebsite(website?: string | null, text?: string): (string | JSX.Element);
 export declare function stripNonAlpha(str?: string | null): string;
 export declare function pluralize(baseWord: string, pluralSuffix: string, count: number): string;
 export declare function getType(fullType?: null | string): string | null | undefined;
