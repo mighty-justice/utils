@@ -8,7 +8,7 @@ export function dateToday () {
 }
 
 export function isFutureDate (date: string) {
-    return new Date(date) > new Date(new Date().toDateString());
+    return new Date(date).getTime() > new Date(new Date().toDateString()).getTime();
 }
 
 export function inferCentury (year: string) {
