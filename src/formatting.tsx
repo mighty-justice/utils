@@ -69,29 +69,32 @@ export function formatFullName (firstName?: string, lastName?: string) {
   return `${firstName || ''} ${lastName || ''}`.trim();
 }
 
-export function formatPhoneNumber (input?: string | null) {
-  if (!hasStringContent(input)) { return EMPTY_FIELD; }
+export function formatNumberTemplates (value: undefined | string | null, templates: string[]) {
+  if (!hasStringContent(value)) { return EMPTY_FIELD; }
 
-  const phoneNumbers = input.match(/\d/g) || []
-    , phoneNotNumbers = input.match(/[^0-9\-(). ]/g) || []
-    , PHONE_FORMATS: string[] = [
-      '###-####',
-      '(###) ###-####',
-      '+# (###) ###-####',
-      '+## (###) ###-####',
-    ];
+  const valueNumbers = value.match(/\d/g) || []
+    , valueNonNumbers = value.match(/[^0-9\-(). ]/g) || [];
 
-  if (phoneNotNumbers.length) {
-    return input;
+  if (valueNonNumbers.length) {
+    return value;
   }
 
-  for (const template of PHONE_FORMATS) {
-    if (canReplaceSymbols(template, phoneNumbers)) {
-      return replaceSymbolsWithChars(template, phoneNumbers);
+  for (const template of templates) {
+    if (canReplaceSymbols(template, valueNumbers)) {
+      return replaceSymbolsWithChars(template, valueNumbers);
     }
   }
 
-  return input;
+  return value;
+}
+
+export function formatPhoneNumber (value?: string | null) {
+  return formatNumberTemplates(value, [
+    '###-####',
+    '(###) ###-####',
+    '+# (###) ###-####',
+    '+## (###) ###-####',
+  ]);
 }
 
 export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.date) {
@@ -131,23 +134,17 @@ export function getOrDefault (value?: any) {
   return value;
 }
 
-function formatNumberFromTemplate (template: string, value?: null | string) {
-  if (!hasStringContent(value)) { return EMPTY_FIELD; }
-
-  const numberValues: string[] = value && value.match(/\d/g) || [];
-  if (canReplaceSymbols(template, numberValues)) {
-    return replaceSymbolsWithChars(template, numberValues);
-  }
-
-  return EMPTY_FIELD;
-}
-
 export function formatSocialSecurityNumber (value?: null | string) {
-  return formatNumberFromTemplate('###-##-####', value);
+  return formatNumberTemplates(value, [
+    '####',
+    '###-##-####',
+  ]);
 }
 
 export function formatEmployerIdNumber (value?: null | string) {
-  return formatNumberFromTemplate('##-#######', value);
+  return formatNumberTemplates(value, [
+    '##-#######',
+  ]);
 }
 
 export function formatPercentage (value?: null | number | string, decimalPoints = 2) {
