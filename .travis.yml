@@ -11,13 +11,13 @@ script: echo "Running tests against $(node -v)..." && yarn test
 jobs:
   include:
     - stage: Build
-      node_js: node
+      node_js: 10
       script: yarn build
     - stage: Lint
-      node_js: node
+      node_js: 10
       script: yarn lint
     - stage: Produce Coverage
-      node_js: node
+      node_js: 10
       script: jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 
 branches:
