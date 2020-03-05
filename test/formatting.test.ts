@@ -174,6 +174,7 @@ describe('formatting', () => {
   });
 
   it('formatSocialSecurityNumber', () => {
+    expect(util.formatSocialSecurityNumber('6789')).toBe('6789');
     expect(util.formatSocialSecurityNumber('123456789')).toBe('123-45-6789');
     expect(util.formatSocialSecurityNumber('12-345-6789')).toBe('123-45-6789');
     expect(util.formatSocialSecurityNumber('12345-6789')).toBe('123-45-6789');
