@@ -7,7 +7,8 @@ export declare function hasStringOrNumberContent(value: unknown): value is numbe
 export declare function splitName(name?: string | null): string[];
 export declare function splitCommaList(str?: string | null): string[];
 export declare function formatFullName(firstName?: string, lastName?: string): string;
-export declare function formatPhoneNumber(input?: string | null): string;
+export declare function formatNumberTemplates(value: undefined | string | null, templates: string[]): string;
+export declare function formatPhoneNumber(value?: string | null): string;
 export declare function formatDate(value?: string | null, dateFormat?: string): string;
 export declare function formatDateTime(value?: string | null): string;
 export declare function getNameOrDefault(obj?: unknown, { field, defaultValue }?: {

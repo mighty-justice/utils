@@ -21768,28 +21768,49 @@
   function formatFullName(firstName, lastName) {
     return "".concat(firstName || '', " ").concat(lastName || '').trim();
   }
-  function formatPhoneNumber(input) {
-    if (!hasStringContent(input)) {
+  function formatNumberTemplates(value, templates) {
+    if (!hasStringContent(value)) {
       return EMPTY_FIELD;
     }
 
-    var phoneNumbers = input.match(/\d/g) || [],
-        phoneNotNumbers = input.match(/[^0-9\-()]/g) || [],
-        PHONE_FORMATS = ['###-####', '(###) ###-####', '+# (###) ###-####', '+## (###) ###-####'];
+    var valueNumbers = value.match(/\d/g) || [],
+        valueNonNumbers = value.match(/[^0-9\-(). ]/g) || [];
 
-    if (phoneNotNumbers.length) {
-      return input;
+    if (valueNonNumbers.length) {
+      return value;
     }
 
-    for (var _i = 0, _PHONE_FORMATS = PHONE_FORMATS; _i < _PHONE_FORMATS.length; _i++) {
-      var template = _PHONE_FORMATS[_i];
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
 
-      if (canReplaceSymbols(template, phoneNumbers)) {
-        return replaceSymbolsWithChars(template, phoneNumbers);
+    try {
+      for (var _iterator = templates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var template = _step.value;
+
+        if (canReplaceSymbols(template, valueNumbers)) {
+          return replaceSymbolsWithChars(template, valueNumbers);
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
       }
     }
 
-    return input;
+    return value;
+  }
+  function formatPhoneNumber(value) {
+    return formatNumberTemplates(value, ['###-####', '(###) ###-####', '+# (###) ###-####', '+## (###) ###-####']);
   }
   function formatDate(value) {
     var dateFormat = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DATE_FORMATS.date;
@@ -21837,26 +21858,11 @@
 
     return value;
   }
-
-  function formatNumberFromTemplate(template, value) {
-    if (!hasStringContent(value)) {
-      return EMPTY_FIELD;
-    }
-
-    var numberValues = value && value.match(/\d/g) || [];
-
-    if (canReplaceSymbols(template, numberValues)) {
-      return replaceSymbolsWithChars(template, numberValues);
-    }
-
-    return EMPTY_FIELD;
-  }
-
   function formatSocialSecurityNumber(value) {
-    return formatNumberFromTemplate('###-##-####', value);
+    return formatNumberTemplates(value, ['####', '###-##-####']);
   }
   function formatEmployerIdNumber(value) {
-    return formatNumberFromTemplate('##-#######', value);
+    return formatNumberTemplates(value, ['##-#######']);
   }
   function formatPercentage(value) {
     var decimalPoints = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
@@ -26844,6 +26850,7 @@
   exports.formatFullName = formatFullName;
   exports.formatMoney = formatMoney;
   exports.formatMoneyInput = formatMoneyInput;
+  exports.formatNumberTemplates = formatNumberTemplates;
   exports.formatParagraphs = formatParagraphs;
   exports.formatPercentage = formatPercentage;
   exports.formatPhoneNumber = formatPhoneNumber;
