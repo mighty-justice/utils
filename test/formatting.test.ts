@@ -14,6 +14,7 @@ describe('formatting', () => {
   [
     util.formatDate,
     util.formatDateTime,
+    util.formatDollars,
     util.formatDuration,
     util.formatEmployerIdNumber,
     util.formatMoney,
@@ -203,10 +204,22 @@ describe('formatting', () => {
   });
 
   it('formatMoney', () => {
+    expect(util.formatMoney(0)).toBe('$0.00');
     expect(util.formatMoney(0.5)).toBe('$0.50');
+    expect(util.formatMoney(1)).toBe('$1.00');
     expect(util.formatMoney(1.55)).toBe('$1.55');
     expect(util.formatMoney(1555333.0)).toBe('$1,555,333.00');
     expect(util.formatMoney(0)).toBe('$0.00');
+  });
+
+  it('formatDollars', () => {
+    expect(util.formatDollars(0)).toBe('$0');
+    expect(util.formatDollars(0.01)).toBe('$0');
+    expect(util.formatDollars(0.49)).toBe('$0');
+    expect(util.formatDollars(0.5)).toBe('$1');
+    expect(util.formatDollars(1.55)).toBe('$2');
+    expect(util.formatDollars(1555333.0)).toBe('$1,555,333');
+    expect(util.formatDollars(0)).toBe('$0');
   });
 
   it('formatDate', () => {

@@ -161,6 +161,11 @@ export function formatMoney (value?: null | number | string) {
   return numeral(value).format('$0,0.00');
 }
 
+export function formatDollars (value?: null | number | string) {
+  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+  return numeral(value).format('$0,0');
+}
+
 export function formatParagraphs (value?: null | string) {
   if (!hasStringContent(value)) { return EMPTY_FIELD; }
   return value.split(/\r?\n/).map((s, i) => <p key={i}>{s}</p>);
