@@ -21884,6 +21884,13 @@
 
     return numeral(value).format('$0,0.00');
   }
+  function formatDollars(value) {
+    if (!hasStringOrNumberContent(value)) {
+      return EMPTY_FIELD;
+    }
+
+    return numeral(value).format('$0,0');
+  }
   function formatParagraphs(value) {
     if (!hasStringContent(value)) {
       return EMPTY_FIELD;
@@ -26845,6 +26852,7 @@
   exports.formatDate = formatDate;
   exports.formatDateTime = formatDateTime;
   exports.formatDelimitedList = formatDelimitedList;
+  exports.formatDollars = formatDollars;
   exports.formatDuration = formatDuration;
   exports.formatEmployerIdNumber = formatEmployerIdNumber;
   exports.formatFullName = formatFullName;

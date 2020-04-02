@@ -20,6 +20,7 @@ export declare function formatSocialSecurityNumber(value?: null | string): strin
 export declare function formatEmployerIdNumber(value?: null | string): string;
 export declare function formatPercentage(value?: null | number | string, decimalPoints?: number): string;
 export declare function formatMoney(value?: null | number | string): string;
+export declare function formatDollars(value?: null | number | string): string;
 export declare function formatParagraphs(value?: null | string): "--" | JSX.Element[];
 export declare function formatCommaSeparatedNumber(value?: null | number | string): string;
 export declare function formatDelimitedList(list?: null | string[], delimiter?: string): any;
