@@ -214,12 +214,11 @@ describe('formatting', () => {
 
   it('formatDollars', () => {
     expect(util.formatDollars(0)).toBe('$0');
-    expect(util.formatDollars(0.01)).toBe('$0');
-    expect(util.formatDollars(0.49)).toBe('$0');
-    expect(util.formatDollars(0.5)).toBe('$1');
-    expect(util.formatDollars(1.55)).toBe('$2');
-    expect(util.formatDollars(1555333.0)).toBe('$1,555,333');
-    expect(util.formatDollars(0)).toBe('$0');
+    expect(util.formatDollars(1)).toBe('$1');
+    expect(util.formatDollars(1.00)).toBe('$1');
+    expect(util.formatDollars(2)).toBe('$2');
+    expect(util.formatDollars(1000)).toBe('$1,000');
+    expect(util.formatDollars(1555333)).toBe('$1,555,333');
   });
 
   it('formatDate', () => {
