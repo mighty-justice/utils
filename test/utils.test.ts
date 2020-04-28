@@ -1,5 +1,5 @@
 /* global describe, it, expect */
-import * as util from '../src';
+import { getPercentDisplay, getPercentValue } from '../src/utils';
 
 // value, display
 const TEST_CASES: Array<[string, string]> = [
@@ -34,23 +34,23 @@ const TO_DISPLAY_ONLY: Array<[any, string]> = [
 describe('utils', () => {
   TEST_CASES.forEach(([value, display]) => {
     it(`Correctly converts percentage between '${value}' <=> '${display}'`, () => {
-      expect(util.getPercentValue(display)).toBe(value);
-      expect(util.getPercentDisplay(value)).toBe(display);
+      expect(getPercentValue(display)).toBe(value);
+      expect(getPercentDisplay(value)).toBe(display);
 
-      expect(util.getPercentValue(util.getPercentDisplay(value))).toBe(value);
-      expect(util.getPercentDisplay(util.getPercentValue(display))).toBe(display);
+      expect(getPercentValue(getPercentDisplay(value))).toBe(value);
+      expect(getPercentDisplay(getPercentValue(display))).toBe(display);
     });
   });
 
   TO_VALUE_ONLY.forEach(([display, value]) => {
     it(`Correctly converts percentage from '${display}' => '${value}'`, () => {
-      expect(util.getPercentValue(display)).toBe(value);
+      expect(getPercentValue(display)).toBe(value);
     });
   });
 
   TO_DISPLAY_ONLY.forEach(([value, display]) => {
     it(`Correctly converts percentage from '${value}' => '${display}'`, () => {
-      expect(util.getPercentDisplay(value)).toBe(display);
+      expect(getPercentDisplay(value)).toBe(display);
     });
   });
 });

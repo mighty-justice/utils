@@ -5,7 +5,7 @@ import { mount } from 'enzyme';
 import {
   createGuardedContainer,
   createDisabledContainer,
-} from '../src';
+} from '../src/containers';
 
 class Button extends Component {
   render () {
