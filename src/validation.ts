@@ -1,15 +1,15 @@
-import moment from 'moment';
+import { isBefore, isValid } from 'date-fns';
 
-export function isValidDate (value: string) {
+export function isValidDate (value: string): boolean {
   return !value || (
       value.length === '####-##-##'.length // ISO date
-      && moment(value).isValid() // Real day
+      && isValid(new Date(value)) // Real day
     );
 }
 
 export function isValidPastDate (value: string) {
   return !value || (
       isValidDate(value)
-      && moment(value).isBefore(moment()) // In the past
+      && isBefore(value, new Date()) // In the past
     );
 }

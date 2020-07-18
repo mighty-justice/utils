@@ -12,7 +12,7 @@ const name = 'utils'
   , extensions = ['.js', '.jsx', '.ts', '.tsx']
   , babelConfig = {
     ...babelrc({ addExternalHelpersPlugin: false }),
-    exclude: 'node_modules/**',
+    include: 'src/**',
     extensions,
   }
   , plugins = [
@@ -39,7 +39,11 @@ export default [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
     ],
-    external: ['ms'],
+    external: [
+      'ms',
+      ...Object.keys(pkg.dependencies || {}),
+      ...Object.keys(pkg.peerDependencies || {}),
+    ],
     plugins,
   },
 ];
