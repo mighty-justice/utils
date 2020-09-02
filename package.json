@@ -2,26 +2,22 @@
   "name": "@mighty-justice/utils",
   "version": "1.3.8",
   "description": "Standardization of small utilities across Mighty",
-  "main": "dist/utils.cjs.js",
-  "module": "dist/utils.esm.js",
-  "browser": "dist/utils.umd.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/tester.esm.js",
+  "typings": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "npm run build:clean && npm run build:types && npm run build:js",
-    "build:clean": "rm -r dist/* || true",
-    "build:js": "rollup -c",
-    "build:types": "yarn tsc --emitDeclarationOnly",
+    "build": "tsdx build",
     "deploy": "np",
-    "dev": "rollup -c -w",
-    "lint": "tslint --project .",
+    "format": "tsdx lint --fix",
+    "lint": "tsdx lint",
+    "prepublishOnly": "tsdx build",
     "preversion": "npm run lint",
-    "test": "jest",
-    "test:watch": "npm run test/*.js -- -w",
-    "version": "npm run build && git add dist",
-    "view-source-map": "source-map-explorer --html dist/index.js dist/index.map > source.html && open source.html"
+    "start": "tsdx watch",
+    "test": "tsdx test",
+    "version": "npm run build && git add dist"
   },
   "repository": {
     "type": "git",
@@ -39,24 +35,22 @@
     "url": "https://github.com/mighty-justice/utils/issues"
   },
   "homepage": "https://mighty-justice.github.io/utils/",
+  "prettier": {
+    "printWidth": 120,
+    "proseWrap": "always",
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
   "jest": {
-    "testPathIgnorePatterns": [
-      "/_book/",
-      "/node_modules/"
-    ],
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx"
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.tsx",
+      "src/**/*.ts"
     ],
     "setupFilesAfterEnv": [
       "./test/setup.ts"
-    ],
-    "testURL": "http://localhost/"
+    ]
   },
   "files": [
     "dist",
@@ -68,56 +62,34 @@
     "mobx-react": "^5.0.0",
     "react": "^16.0.0"
   },
-  "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
-  },
+  "resolutions": {},
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.3.4",
-    "@babel/plugin-proposal-decorators": "^7.3.0",
-    "@babel/plugin-proposal-export-default-from": "^7.2.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
-    "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.3.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
-    "@mighty-justice/tslint-config": "^0.3.0",
-    "@types/classnames": "^2.2.7",
-    "@types/enzyme": "^3.9.0",
-    "@types/enzyme-adapter-react-16": "^1.0.5",
-    "@types/jest": "^25.1.0",
-    "@types/lodash": "^4.14.122",
-    "@types/numeral": "^0.0.26",
-    "@types/react": "16.9.19",
-    "babelrc-rollup": "^3.0.0",
-    "coveralls": "^3.0.3",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.10.0",
-    "jest": "^24.1.0",
-    "jest-environment-jsdom": "^25.1.0",
-    "lodash": "4.17.15",
+    "@types/classnames": "^2.2.10",
+    "@types/enzyme": "^3.10.5",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/jest": "^26.0.13",
+    "@types/lodash": "^4.14.161",
+    "@types/numeral": "^0.0.28",
+    "@types/react": "16.9.49",
+    "babel-jest": "^26.3.0",
+    "coveralls": "^3.1.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.4",
+    "lodash": "4.17.20",
     "mobx": "^5.13.0",
     "mobx-react": "^6.1.3",
     "np": "^5.1.0",
     "numeral": "^2.0.6",
-    "react": "16.12.0",
-    "react-dom": "^16.8.3",
-    "regenerator-runtime": "^0.13.1",
-    "rollup": "^1.4.1",
-    "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-peer-deps-external": "^2.2.0",
-    "source-map-explorer": "^2.0.1",
-    "tslint": "^5.13.1",
-    "typescript": "^3.3.3333"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "tsdx": "^0.13.3",
+    "typescript": "^3.0.0"
   },
   "dependencies": {
     "classnames": "^2.2.6",
     "date-fns": "^1.30.1",
     "decimal.js": "^10.1.1",
-    "fast-memoize": "^2.5.1",
+    "fast-memoize": "^2.5.2",
     "html-react-parser": "0.10.0",
     "iso8601-duration": "^1.1.7",
     "moment": "^2.24.0",

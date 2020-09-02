@@ -24,5 +24,5 @@ describe('validation', () => {
 
       expect(utilFn('2040-01-01')).toBe(utilKey === 'isValidDate');
     });
-  })
+  });
 });

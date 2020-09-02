@@ -1,14 +1,7 @@
-/* global describe, it, expect */
 import * as util from '../src';
 import { EMPTY_FIELD } from '../src';
 
-const EMPTY_VALUES = [
-  '             ',
-  ' ',
-  '',
-  null,
-  undefined,
-];
+const EMPTY_VALUES = ['             ', ' ', '', null, undefined];
 
 describe('formatting', () => {
   [
@@ -157,14 +150,14 @@ describe('formatting', () => {
 
   it('getNameOrDefault', () => {
     EMPTY_VALUES.forEach(emptyValue => {
-      expect(util.getNameOrDefault(emptyValue, {defaultValue: 'custom'})).toBe('custom');
+      expect(util.getNameOrDefault(emptyValue, { defaultValue: 'custom' })).toBe('custom');
     });
 
-    expect(util.getNameOrDefault({first_name: 'John', last_name: 'Smith'})).toBe('John Smith');
-    expect(util.getNameOrDefault({name: 'John Smith'})).toBe('John Smith');
-    expect(util.getNameOrDefault({customName: 'John Smith'}, {field: 'customName'})).toBe('John Smith');
-    expect(util.getNameOrDefault({customName: 'John Smith'})).toBe('--');
-    expect(util.getNameOrDefault({first_name: 'John'})).toBe('John');
+    expect(util.getNameOrDefault({ first_name: 'John', last_name: 'Smith' })).toBe('John Smith');
+    expect(util.getNameOrDefault({ name: 'John Smith' })).toBe('John Smith');
+    expect(util.getNameOrDefault({ customName: 'John Smith' }, { field: 'customName' })).toBe('John Smith');
+    expect(util.getNameOrDefault({ customName: 'John Smith' })).toBe('--');
+    expect(util.getNameOrDefault({ first_name: 'John' })).toBe('John');
   });
 
   it('getOrDefault', () => {
@@ -215,7 +208,7 @@ describe('formatting', () => {
   it('formatDollars', () => {
     expect(util.formatDollars(0)).toBe('$0');
     expect(util.formatDollars(1)).toBe('$1');
-    expect(util.formatDollars(1.00)).toBe('$1');
+    expect(util.formatDollars(1.0)).toBe('$1');
     expect(util.formatDollars(2)).toBe('$2');
     expect(util.formatDollars(1000)).toBe('$1,000');
     expect(util.formatDollars(1555333)).toBe('$1,555,333');
@@ -234,8 +227,8 @@ describe('formatting', () => {
     expect(util.mapBooleanToText(false)).toBe('No');
     expect(util.mapBooleanToText(null)).toBe('--');
     expect(util.mapBooleanToText(undefined)).toBe('--');
-    expect(util.mapBooleanToText(undefined, {mapUndefinedToNo: false})).toBe('--');
-    expect(util.mapBooleanToText(undefined, {mapUndefinedToNo: true})).toBe('No');
+    expect(util.mapBooleanToText(undefined, { mapUndefinedToNo: false })).toBe('--');
+    expect(util.mapBooleanToText(undefined, { mapUndefinedToNo: true })).toBe('No');
   });
 
   it('formatMoneyInput: Gets value from a money input with commas', () => {
@@ -253,7 +246,9 @@ describe('formatting', () => {
     expect(util.formatDuration('P3Y')).toBe('3 years');
     expect(util.formatDuration('P6M')).toBe('6 months');
     expect(util.formatDuration('P1Y6M')).toBe('1 year, 6 months');
-    expect(util.formatDuration('P1Y2M4DT20H44M12.67S')).toBe('1 year, 2 months, 4 days, 20 hours, 44 minutes, 12.67 seconds');
+    expect(util.formatDuration('P1Y2M4DT20H44M12.67S')).toBe(
+      '1 year, 2 months, 4 days, 20 hours, 44 minutes, 12.67 seconds',
+    );
   });
 
   it('formatParagraphs', () => {
@@ -320,8 +315,8 @@ describe('formatting', () => {
   });
 
   it('formattedWebsite', () => {
-    const website = 'https://www.mighty.com'
-      , innerText = 'innerText';
+    const website = 'https://www.mighty.com',
+      innerText = 'innerText';
 
     const formattedWebsite = util.formatWebsite(website) as JSX.Element;
     expect(formattedWebsite.props.href).toBe(website);
@@ -334,23 +329,35 @@ describe('formatting', () => {
 
   it('formatAddress: Format address as single-line string', () => {
     expect(util.formatAddress(null)).toBe('--, --, -- --');
-    expect(util.formatAddress(
-      {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001'}),
+    expect(
+      util.formatAddress({
+        address1: '123 Fake St',
+        address2: 'Apt 1-D',
+        city: 'New York',
+        state: 'NY',
+        zip_code: '10001',
+      }),
     ).toBe('123 Fake St Apt 1-D, New York, NY 10001');
-    expect(util.formatAddress(
-      {address1: '', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001'}),
+    expect(
+      util.formatAddress({ address1: '', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '10001' }),
     ).toBe('-- Apt 1-D, New York, NY 10001');
-    expect(util.formatAddress(
-      {address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'}),
+    expect(
+      util.formatAddress({ address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001' }),
     ).toBe('123 Fake St, New York, NY 10001');
-    expect(util.formatAddress(
-      {address1: '123 Fake St', address2: 'Apt 1-D', city: '', state: 'NY', zip_code: '10001'}),
+    expect(
+      util.formatAddress({ address1: '123 Fake St', address2: 'Apt 1-D', city: '', state: 'NY', zip_code: '10001' }),
     ).toBe('123 Fake St Apt 1-D, --, NY 10001');
-    expect(util.formatAddress(
-      {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: '', zip_code: '10001'}),
+    expect(
+      util.formatAddress({
+        address1: '123 Fake St',
+        address2: 'Apt 1-D',
+        city: 'New York',
+        state: '',
+        zip_code: '10001',
+      }),
     ).toBe('123 Fake St Apt 1-D, New York, -- 10001');
-    expect(util.formatAddress(
-      {address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: ''}),
+    expect(
+      util.formatAddress({ address1: '123 Fake St', address2: 'Apt 1-D', city: 'New York', state: 'NY', zip_code: '' }),
     ).toBe('123 Fake St Apt 1-D, New York, NY --');
 
     const parsedAddressMultilineNull = util.formatAddressMultiline(null) as JSX.Element[];
@@ -358,8 +365,13 @@ describe('formatting', () => {
     expect(parsedAddressMultilineNull[1].type).toBe('br');
     expect(parsedAddressMultilineNull[2]).toBe('--, -- --');
 
-    const parsedAddressMultilineFull = util.formatAddressMultiline(
-      {address1: '123 Fake St', address2: '', city: 'New York', state: 'NY', zip_code: '10001'}) as JSX.Element[];
+    const parsedAddressMultilineFull = util.formatAddressMultiline({
+      address1: '123 Fake St',
+      address2: '',
+      city: 'New York',
+      state: 'NY',
+      zip_code: '10001',
+    }) as JSX.Element[];
     expect(parsedAddressMultilineFull[0]).toBe('123 Fake St');
     expect(parsedAddressMultilineFull[1].type).toBe('br');
     expect(parsedAddressMultilineFull[2]).toBe('New York, NY 10001');
