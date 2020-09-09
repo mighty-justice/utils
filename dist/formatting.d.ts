@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { IAddress } from './interfaces';
 export declare function canReplaceSymbols(template: string, chars: string[]): boolean;
 export declare function replaceSymbolsWithChars(template: string, chars: string[]): string;
@@ -12,8 +11,8 @@ export declare function formatPhoneNumber(value?: string | null): string;
 export declare function formatDate(value?: string | null, dateFormat?: string): string;
 export declare function formatDateTime(value?: string | null): string;
 export declare function getNameOrDefault(obj?: unknown, { field, defaultValue }?: {
-    field?: string | undefined;
-    defaultValue?: string | undefined;
+    field?: string;
+    defaultValue?: string;
 }): any;
 export declare function getOrDefault(value?: any): any;
 export declare function formatSocialSecurityNumber(value?: null | string): string;
@@ -27,15 +26,15 @@ export declare function formatDelimitedList(list?: null | string[], delimiter?: 
 export declare function mapBooleanToText(bool?: boolean | null, { mapUndefinedToNo }?: {
     mapUndefinedToNo: boolean;
 }): "--" | "Yes" | "No";
-export declare function formatMoneyInput(value?: null | number | string): number | null | undefined;
+export declare function formatMoneyInput(value?: null | number | string): number;
 export declare function formatDuration(iso8601?: null | string): string;
-export declare function formatWebsite(website?: string | null, text?: string): (string | JSX.Element);
+export declare function formatWebsite(website?: string | null, text?: string): string | JSX.Element;
 export declare function stripNonAlpha(str?: string | null): string;
 export declare function pluralize(baseWord: string, pluralSuffix: string, count: number): string;
-export declare function getType(fullType?: null | string): string | null | undefined;
+export declare function getType(fullType?: null | string): string;
 export declare function preserveNewLines(body: string): string;
 export declare function parseAndPreserveNewlines(body?: string): any;
-export declare function getDisplayName(component: any): (string | undefined);
+export declare function getDisplayName(component: any): string | undefined;
 export declare const varToLabel: (str: string) => string;
 export declare function getInitials(value?: string | null): string;
 export declare function toKey(dict: {

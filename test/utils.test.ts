@@ -1,4 +1,3 @@
-/* global describe, it, expect */
 import * as util from '../src';
 
 // value, display

@@ -25,55 +25,65 @@ import {
 import { DATE_FORMATS, EMPTY_FIELD, RE_ALPHA, RE_SMALL_WORDS, RE_WORDS } from './constants';
 import { IAddress } from './interfaces';
 
-export function canReplaceSymbols (template: string, chars: string[]): boolean {
-  return (template.split('#').length - 1) === chars.length;
+export function canReplaceSymbols(template: string, chars: string[]): boolean {
+  return template.split('#').length - 1 === chars.length;
 }
 
-export function replaceSymbolsWithChars (template: string, chars: string[]) {
+export function replaceSymbolsWithChars(template: string, chars: string[]) {
   const charsReverse = chars.reverse();
 
   return template
     .split('')
-    .map(char => (char === '#') ? charsReverse.pop() : char)
-    .join('')
-    ;
+    .map(char => (char === '#' ? charsReverse.pop() : char))
+    .join('');
 }
 
-export function hasStringContent (value: unknown): value is string {
-  if (!isString(value)) { return false; }
+export function hasStringContent(value: unknown): value is string {
+  if (!isString(value)) {
+    return false;
+  }
   return !!value.replace(/ /g, '').length;
 }
 
-export function hasStringOrNumberContent (value: unknown): value is number | string {
+export function hasStringOrNumberContent(value: unknown): value is number | string {
   return hasStringContent(value) || isNumber(value);
 }
 
-export function splitName (name?: string | null) {
-  if (!hasStringContent(name)) { return ['', '']; }
+export function splitName(name?: string | null) {
+  if (!hasStringContent(name)) {
+    return ['', ''];
+  }
 
   const [firstName, ...lastName] = name.trim().split(' ');
   return [firstName, lastName.join(' ').trim()];
 }
 
-export function splitCommaList (str?: string | null) {
-  if (!hasStringContent(str)) { return []; }
+export function splitCommaList(str?: string | null) {
+  if (!hasStringContent(str)) {
+    return [];
+  }
 
   if (str.indexOf(',') === -1) {
     return [str.trim()];
   }
 
-  return str.split(',').map(s => s.trim()).filter(v => (v !== ''));
+  return str
+    .split(',')
+    .map(s => s.trim())
+    .filter(v => v !== '');
 }
 
-export function formatFullName (firstName?: string, lastName?: string) {
+export function formatFullName(firstName?: string, lastName?: string) {
   return `${firstName || ''} ${lastName || ''}`.trim();
 }
 
-export function formatNumberTemplates (value: undefined | string | null, templates: string[]) {
-  if (!hasStringContent(value)) { return EMPTY_FIELD; }
+export function formatNumberTemplates(value: undefined | string | null, templates: string[]) {
+  if (!hasStringContent(value)) {
+    return EMPTY_FIELD;
+  }
 
-  const valueNumbers = value.match(/\d/g) || []
-    , valueNonNumbers = value.match(/[^0-9\-(). ]/g) || [];
+  const valueNumbers = value.match(/\d/g) || [],
+    valueNonNumbers = value.match(/[^0-9\-(). ]/g) || [];
 
   if (valueNonNumbers.length) {
     return value;
@@ -88,28 +98,25 @@ export function formatNumberTemplates (value: undefined | string | null, templat
   return value;
 }
 
-export function formatPhoneNumber (value?: string | null) {
-  return formatNumberTemplates(value, [
-    '###-####',
-    '(###) ###-####',
-    '+# (###) ###-####',
-    '+## (###) ###-####',
-  ]);
+export function formatPhoneNumber(value?: string | null) {
+  return formatNumberTemplates(value, ['###-####', '(###) ###-####', '+# (###) ###-####', '+## (###) ###-####']);
 }
 
-export function formatDate (value?: string | null, dateFormat = DATE_FORMATS.date) {
-  if (!hasStringContent(value)) { return EMPTY_FIELD; }
+export function formatDate(value?: string | null, dateFormat = DATE_FORMATS.date) {
+  if (!hasStringContent(value)) {
+    return EMPTY_FIELD;
+  }
   return dateFnsFormat(value, dateFormat);
 }
 
-export function formatDateTime (value?: string | null) {
+export function formatDateTime(value?: string | null) {
   return formatDate(value, DATE_FORMATS.date_at_time);
 }
 
-export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
+export function getNameOrDefault(obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
   if (obj) {
     if (has(obj, 'first_name')) {
-      return (`${result(obj, 'first_name', '')} ${result(obj, 'last_name', '')}`).trim();
+      return `${result(obj, 'first_name', '')} ${result(obj, 'last_name', '')}`.trim();
     }
     if (has(obj, field)) {
       return get(obj, field);
@@ -118,10 +125,10 @@ export function getNameOrDefault (obj?: unknown, { field = 'name', defaultValue 
   return defaultValue;
 }
 
-export function getOrDefault (value?: any) {
-  const isUndefined = value === undefined
-    , isNull = value === null
-    , isEmptyString = isString(value) && !hasStringContent(value);
+export function getOrDefault(value?: any) {
+  const isUndefined = value === undefined,
+    isNull = value === null,
+    isEmptyString = isString(value) && !hasStringContent(value);
 
   if (isUndefined || isNull || isEmptyString) {
     return EMPTY_FIELD;
@@ -134,54 +141,61 @@ export function getOrDefault (value?: any) {
   return value;
 }
 
-export function formatSocialSecurityNumber (value?: null | string) {
-  return formatNumberTemplates(value, [
-    '####',
-    '###-##-####',
-  ]);
+export function formatSocialSecurityNumber(value?: null | string) {
+  return formatNumberTemplates(value, ['####', '###-##-####']);
 }
 
-export function formatEmployerIdNumber (value?: null | string) {
-  return formatNumberTemplates(value, [
-    '##-#######',
-  ]);
+export function formatEmployerIdNumber(value?: null | string) {
+  return formatNumberTemplates(value, ['##-#######']);
 }
 
-export function formatPercentage (value?: null | number | string, decimalPoints = 2) {
-  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+export function formatPercentage(value?: null | number | string, decimalPoints = 2) {
+  if (!hasStringOrNumberContent(value)) {
+    return EMPTY_FIELD;
+  }
 
-  const zeros = times(decimalPoints, () => '0').join('')
-    , formattingString = `0.${zeros}%`;
+  const zeros = times(decimalPoints, () => '0').join(''),
+    formattingString = `0.${zeros}%`;
 
   return numeral(value).format(formattingString);
 }
 
-export function formatMoney (value?: null | number | string) {
-  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+export function formatMoney(value?: null | number | string) {
+  if (!hasStringOrNumberContent(value)) {
+    return EMPTY_FIELD;
+  }
   return numeral(value).format('$0,0.00');
 }
 
-export function formatDollars (value?: null | number | string) {
-  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+export function formatDollars(value?: null | number | string) {
+  if (!hasStringOrNumberContent(value)) {
+    return EMPTY_FIELD;
+  }
   return numeral(value).format('$0,0');
 }
 
-export function formatParagraphs (value?: null | string) {
-  if (!hasStringContent(value)) { return EMPTY_FIELD; }
+export function formatParagraphs(value?: null | string) {
+  if (!hasStringContent(value)) {
+    return EMPTY_FIELD;
+  }
   return value.split(/\r?\n/).map((s, i) => <p key={i}>{s}</p>);
 }
 
-export function formatCommaSeparatedNumber (value?: null | number | string) {
-  if (!hasStringOrNumberContent(value)) { return EMPTY_FIELD; }
+export function formatCommaSeparatedNumber(value?: null | number | string) {
+  if (!hasStringOrNumberContent(value)) {
+    return EMPTY_FIELD;
+  }
   return numeral(value).format('0,0');
 }
 
-export function formatDelimitedList (list?: null | string[], delimiter = ', ') {
-  if (!list) { return EMPTY_FIELD; }
+export function formatDelimitedList(list?: null | string[], delimiter = ', ') {
+  if (!list) {
+    return EMPTY_FIELD;
+  }
   return getOrDefault(list.join(delimiter));
 }
 
-export function mapBooleanToText (bool?: boolean | null, {mapUndefinedToNo} = {mapUndefinedToNo: false}) {
+export function mapBooleanToText(bool?: boolean | null, { mapUndefinedToNo } = { mapUndefinedToNo: false }) {
   if (isBoolean(bool)) {
     return bool ? 'Yes' : 'No';
   }
@@ -193,13 +207,17 @@ export function mapBooleanToText (bool?: boolean | null, {mapUndefinedToNo} = {m
   return EMPTY_FIELD;
 }
 
-export function formatMoneyInput (value?: null | number | string) {
-  if (!hasStringOrNumberContent(value)) { return value; }
+export function formatMoneyInput(value?: null | number | string) {
+  if (!hasStringOrNumberContent(value)) {
+    return value;
+  }
   return numeral(value).value();
 }
 
-export function formatDuration (iso8601?: null | string) {
-  if (!hasStringContent(iso8601)) { return EMPTY_FIELD; }
+export function formatDuration(iso8601?: null | string) {
+  if (!hasStringContent(iso8601)) {
+    return EMPTY_FIELD;
+  }
 
   // Translate object to KV Pair
   let unitCounts = Object.entries(parse(iso8601));
@@ -211,7 +229,7 @@ export function formatDuration (iso8601?: null | string) {
   // De-pluralize keys for entries of 1
   const unitCountsHuman = unitCounts.map(([unit, count]) => [
     // tslint:disable-next-line no-magic-numbers
-    (count === 1) ? unit.slice(0, -1) : unit, // de-pluralize single count units
+    count === 1 ? unit.slice(0, -1) : unit, // de-pluralize single count units
     count,
   ]);
 
@@ -219,52 +237,61 @@ export function formatDuration (iso8601?: null | string) {
   return unitCountsHuman.map(([unit, count]) => `${count} ${unit}`).join(', ');
 }
 
-export function formatWebsite (website?: string | null, text?: string): (string | JSX.Element) {
-  if (!hasStringContent(website)) { return EMPTY_FIELD; }
+export function formatWebsite(website?: string | null, text?: string): string | JSX.Element {
+  if (!hasStringContent(website)) {
+    return EMPTY_FIELD;
+  }
 
   return (
-    <a href={website} rel='noopener noreferrer' target='_blank'>{text || website}</a>
+    <a href={website} rel="noopener noreferrer" target="_blank">
+      {text || website}
+    </a>
   );
 }
 
-export function stripNonAlpha (str?: string | null) {
-  if (!hasStringContent(str)) { return ''; }
+export function stripNonAlpha(str?: string | null) {
+  if (!hasStringContent(str)) {
+    return '';
+  }
   return str.replace(RE_ALPHA, '');
 }
 
-export function pluralize (baseWord: string, pluralSuffix: string, count: number) {
+export function pluralize(baseWord: string, pluralSuffix: string, count: number) {
   return count === 1 ? baseWord : `${baseWord}${pluralSuffix}`;
 }
 
-export function getType (fullType?: null | string) {
+export function getType(fullType?: null | string) {
   const type = fullType && fullType.split('.')[1];
   return type || fullType;
 }
 
-export function preserveNewLines (body: string) {
-  return (body.replace(/\n/g, '<br/>'));
+export function preserveNewLines(body: string) {
+  return body.replace(/\n/g, '<br/>');
 }
 
-export function parseAndPreserveNewlines (body?: string) {
-  if (!hasStringContent(body)) { return EMPTY_FIELD; }
+export function parseAndPreserveNewlines(body?: string) {
+  if (!hasStringContent(body)) {
+    return EMPTY_FIELD;
+  }
   return parser(preserveNewLines(escape(body)));
 }
 
-export function getDisplayName (component: any): (string | undefined) {
-  if (!component) { return undefined; }
+export function getDisplayName(component: any): string | undefined {
+  if (!component) {
+    return undefined;
+  }
   return component.displayName || component.name || 'Component';
 }
 
-function _hasSmallWords (value: string) {
+function _hasSmallWords(value: string) {
   return value.search(RE_SMALL_WORDS) > -1;
 }
 
-function _varToLabel (value: string) {
-  const suffix = value.split('.').pop() || ''
-    , formatted = startCase(suffix)
-    , wordArray = formatted.match(RE_WORDS) || []
-    , notOnlyWord = wordArray.length > 1
-    ;
+function _varToLabel(value: string) {
+  const suffix = value.split('.').pop() || '',
+    formatted = startCase(suffix),
+    wordArray = formatted.match(RE_WORDS) || [],
+    notOnlyWord = wordArray.length > 1;
 
   return wordArray
     .map((match: string, index: number) => {
@@ -281,55 +308,63 @@ function _varToLabel (value: string) {
 
 export const varToLabel: (str: string) => string = memoize(_varToLabel);
 
-export function getInitials (value?: string | null) {
-  if (!hasStringContent(value)) { return ''; }
+export function getInitials(value?: string | null) {
+  if (!hasStringContent(value)) {
+    return '';
+  }
 
-  const MAX_CHARS = 3
-    , prefix = value.split(',')[0] || ''
-    , formatted = startCase(prefix)
-    , isValueAllCaps = formatted === upperCase(formatted)
-    , wordArray = formatted.match(RE_WORDS) || [];
+  const MAX_CHARS = 3,
+    prefix = value.split(',')[0] || '',
+    formatted = startCase(prefix),
+    isValueAllCaps = formatted === upperCase(formatted),
+    wordArray = formatted.match(RE_WORDS) || [];
 
   return wordArray
     .map((word: string) => {
       const isWordAllCaps = word === upperCase(word);
 
-      if (_hasSmallWords(word)) { return ''; }
-      if (isWordAllCaps && !isValueAllCaps) { return word; }
+      if (_hasSmallWords(word)) {
+        return '';
+      }
+      if (isWordAllCaps && !isValueAllCaps) {
+        return word;
+      }
       return word.charAt(0).toUpperCase();
     })
     .join('')
     .substring(0, MAX_CHARS);
 }
 
-export function toKey (dict: { [key: string]: any }) {
-  const dictSorted = sortBy(map(dict, (value: any, key: string) => [key, value]))
-    , dictFiltered = reject(dictSorted, ([_key, value]: [string, any]) => (
-    (value === null || value === undefined)
-  )) as Array<[string, any]>;
+export function toKey(dict: { [key: string]: any }) {
+  const dictSorted = sortBy(map(dict, (value: any, key: string) => [key, value])),
+    dictFiltered = reject(dictSorted, ([_key, value]: [string, any]) => value === null || value === undefined) as Array<
+      [string, any]
+    >;
 
   if (dictFiltered.length < 1) {
     return '';
   }
 
-  const dictString = dictFiltered.map(([key, value]: [string, any]) => (
-    `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-  )).join('&');
+  const dictString = dictFiltered
+    .map(([key, value]: [string, any]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&');
 
   return `?${dictString}`;
 }
 
-export function formatAddress (address?: IAddress | null) {
-  if (!address) { return '--, --, -- --'; }
+export function formatAddress(address?: IAddress | null) {
+  if (!address) {
+    return '--, --, -- --';
+  }
 
-  const filledInAddress = mapValues(address, s => s || EMPTY_FIELD)
-    , { address1, city, state, zip_code } = filledInAddress
-    , { address2 } = address
-    , joinedAddress = [address1, address2].join(' ').trim();
+  const filledInAddress = mapValues(address, s => s || EMPTY_FIELD),
+    { address1, city, state, zip_code } = filledInAddress,
+    { address2 } = address,
+    joinedAddress = [address1, address2].join(' ').trim();
 
   return `${joinedAddress}, ${city}, ${state} ${zip_code}`;
 }
 
-export function formatAddressMultiline (address?: IAddress | null) {
+export function formatAddressMultiline(address?: IAddress | null) {
   return parser(formatAddress(address).replace(', ', '<br/>'));
 }

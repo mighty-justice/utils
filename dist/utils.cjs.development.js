@@ -1,16 +1,23 @@
-import Decimal from 'decimal.js';
-import { __decorate } from 'tslib';
-import React, { Component } from 'react';
-import { computed } from 'mobx';
-import { observer } from 'mobx-react';
-import cx from 'classnames';
-import { parse } from 'iso8601-duration';
-import { format } from 'date-fns';
-import numeral from 'numeral';
-import parser from 'html-react-parser';
-import memoize from 'fast-memoize';
-import { isString, isNumber, has, result, get, times, isBoolean, escape, startCase, upperCase, sortBy, map, reject, mapValues } from 'lodash-es';
-import moment from 'moment';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var Decimal = _interopDefault(require('decimal.js'));
+var tslib = require('tslib');
+var React = require('react');
+var React__default = _interopDefault(React);
+var mobx = require('mobx');
+var mobxReact = require('mobx-react');
+var cx = _interopDefault(require('classnames'));
+var iso8601Duration = require('iso8601-duration');
+var dateFns = require('date-fns');
+var numeral = _interopDefault(require('numeral'));
+var parser = _interopDefault(require('html-react-parser'));
+var memoize = _interopDefault(require('fast-memoize'));
+var lodash = require('lodash');
+var moment = _interopDefault(require('moment'));
 
 var EMPTY_FIELD = '--';
 var DATE_FORMATS = {
@@ -97,14 +104,14 @@ function replaceSymbolsWithChars(template, chars) {
   }).join('');
 }
 function hasStringContent(value) {
-  if (!isString(value)) {
+  if (!lodash.isString(value)) {
     return false;
   }
 
   return !!value.replace(/ /g, '').length;
 }
 function hasStringOrNumberContent(value) {
-  return hasStringContent(value) || isNumber(value);
+  return hasStringContent(value) || lodash.isNumber(value);
 }
 function splitName(name) {
   if (!hasStringContent(name)) {
@@ -169,7 +176,7 @@ function formatDate(value, dateFormat) {
     return EMPTY_FIELD;
   }
 
-  return format(value, dateFormat);
+  return dateFns.format(value, dateFormat);
 }
 function formatDateTime(value) {
   return formatDate(value, DATE_FORMATS.date_at_time);
@@ -182,12 +189,12 @@ function getNameOrDefault(obj, _temp) {
       defaultValue = _ref$defaultValue === void 0 ? EMPTY_FIELD : _ref$defaultValue;
 
   if (obj) {
-    if (has(obj, 'first_name')) {
-      return (result(obj, 'first_name', '') + " " + result(obj, 'last_name', '')).trim();
+    if (lodash.has(obj, 'first_name')) {
+      return (lodash.result(obj, 'first_name', '') + " " + lodash.result(obj, 'last_name', '')).trim();
     }
 
-    if (has(obj, field)) {
-      return get(obj, field);
+    if (lodash.has(obj, field)) {
+      return lodash.get(obj, field);
     }
   }
 
@@ -196,13 +203,13 @@ function getNameOrDefault(obj, _temp) {
 function getOrDefault(value) {
   var isUndefined = value === undefined,
       isNull = value === null,
-      isEmptyString = isString(value) && !hasStringContent(value);
+      isEmptyString = lodash.isString(value) && !hasStringContent(value);
 
   if (isUndefined || isNull || isEmptyString) {
     return EMPTY_FIELD;
   }
 
-  if (isString(value)) {
+  if (lodash.isString(value)) {
     return value.trim();
   }
 
@@ -223,7 +230,7 @@ function formatPercentage(value, decimalPoints) {
     return EMPTY_FIELD;
   }
 
-  var zeros = times(decimalPoints, function () {
+  var zeros = lodash.times(decimalPoints, function () {
     return '0';
   }).join(''),
       formattingString = "0." + zeros + "%";
@@ -249,7 +256,7 @@ function formatParagraphs(value) {
   }
 
   return value.split(/\r?\n/).map(function (s, i) {
-    return React.createElement("p", {
+    return React__default.createElement("p", {
       key: i
     }, s);
   });
@@ -278,7 +285,7 @@ function mapBooleanToText(bool, _temp2) {
   } : _temp2,
       mapUndefinedToNo = _ref2.mapUndefinedToNo;
 
-  if (isBoolean(bool)) {
+  if (lodash.isBoolean(bool)) {
     return bool ? 'Yes' : 'No';
   }
 
@@ -301,7 +308,7 @@ function formatDuration(iso8601) {
   } // Translate object to KV Pair
 
 
-  var unitCounts = Object.entries(parse(iso8601)); // Remove 0 entries
+  var unitCounts = Object.entries(iso8601Duration.parse(iso8601)); // Remove 0 entries
   // tslint:disable-next-line variable-name
 
   unitCounts = unitCounts.filter(function (_ref3) {
@@ -327,7 +334,7 @@ function formatWebsite(website, text) {
     return EMPTY_FIELD;
   }
 
-  return React.createElement("a", {
+  return React__default.createElement("a", {
     href: website,
     rel: "noopener noreferrer",
     target: "_blank"
@@ -355,7 +362,7 @@ function parseAndPreserveNewlines(body) {
     return EMPTY_FIELD;
   }
 
-  return parser(preserveNewLines(escape(body)));
+  return parser(preserveNewLines(lodash.escape(body)));
 }
 function getDisplayName(component) {
   if (!component) {
@@ -371,7 +378,7 @@ function _hasSmallWords(value) {
 
 function _varToLabel(value) {
   var suffix = value.split('.').pop() || '',
-      formatted = startCase(suffix),
+      formatted = lodash.startCase(suffix),
       wordArray = formatted.match(RE_WORDS) || [],
       notOnlyWord = wordArray.length > 1;
   return wordArray.map(function (match, index) {
@@ -393,11 +400,11 @@ function getInitials(value) {
 
   var MAX_CHARS = 3,
       prefix = value.split(',')[0] || '',
-      formatted = startCase(prefix),
-      isValueAllCaps = formatted === upperCase(formatted),
+      formatted = lodash.startCase(prefix),
+      isValueAllCaps = formatted === lodash.upperCase(formatted),
       wordArray = formatted.match(RE_WORDS) || [];
   return wordArray.map(function (word) {
-    var isWordAllCaps = word === upperCase(word);
+    var isWordAllCaps = word === lodash.upperCase(word);
 
     if (_hasSmallWords(word)) {
       return '';
@@ -411,10 +418,10 @@ function getInitials(value) {
   }).join('').substring(0, MAX_CHARS);
 }
 function toKey(dict) {
-  var dictSorted = sortBy(map(dict, function (value, key) {
+  var dictSorted = lodash.sortBy(lodash.map(dict, function (value, key) {
     return [key, value];
   })),
-      dictFiltered = reject(dictSorted, function (_ref6) {
+      dictFiltered = lodash.reject(dictSorted, function (_ref6) {
     var value = _ref6[1];
     return value === null || value === undefined;
   });
@@ -435,7 +442,7 @@ function formatAddress(address) {
     return '--, --, -- --';
   }
 
-  var filledInAddress = mapValues(address, function (s) {
+  var filledInAddress = lodash.mapValues(address, function (s) {
     return s || EMPTY_FIELD;
   }),
       address1 = filledInAddress.address1,
@@ -462,7 +469,7 @@ function createDisabledContainer(WrappedComponent) {
 
     _proto.render = function render() {
       var classNames = cx(this.props.className, 'disabled');
-      return React.createElement(WrappedComponent, Object.assign({}, this.props, {
+      return React__default.createElement(WrappedComponent, Object.assign({}, this.props, {
         className: classNames,
         "data-for": "permission-required",
         "data-tip": true,
@@ -473,10 +480,10 @@ function createDisabledContainer(WrappedComponent) {
     };
 
     return DisabledContainer;
-  }(Component);
+  }(React.Component);
 
   DisabledContainer.displayName = "DisabledContainer(" + getDisplayName(WrappedComponent) + ")";
-  DisabledContainer = __decorate([observer], DisabledContainer);
+  DisabledContainer = tslib.__decorate([mobxReact.observer], DisabledContainer);
   return DisabledContainer;
 } // tslint:disable-next-line max-line-length
 
@@ -499,7 +506,7 @@ function createGuardedContainer(_ref) {
     var _proto2 = GuardedContainer.prototype;
 
     _proto2.render = function render() {
-      return React.createElement(this.GuardedComponent, Object.assign({}, this.props));
+      return React__default.createElement(this.GuardedComponent, Object.assign({}, this.props));
     };
 
     _createClass(GuardedContainer, [{
@@ -510,13 +517,13 @@ function createGuardedContainer(_ref) {
     }]);
 
     return GuardedContainer;
-  }(Component);
+  }(React.Component);
 
   GuardedContainer.displayName = "GuardedContainer(" + getDisplayName(enabledComponent) + ")";
 
-  __decorate([computed], GuardedContainer.prototype, "userHasPermission", null);
+  tslib.__decorate([mobx.computed], GuardedContainer.prototype, "userHasPermission", null);
 
-  GuardedContainer = __decorate([observer], GuardedContainer);
+  GuardedContainer = tslib.__decorate([mobxReact.observer], GuardedContainer);
   return GuardedContainer;
 }
 
@@ -571,5 +578,56 @@ function isValidPastDate(value) {
   ;
 }
 
-export { CENT_DECIMAL, DATE_FORMATS, EMPTY_FIELD, RE_ALPHA, RE_SMALL_WORDS, RE_WORDS, canReplaceSymbols, createDisabledContainer, createGuardedContainer, dateToday, formatAddress, formatAddressMultiline, formatCommaSeparatedNumber, formatDate, formatDateTime, formatDelimitedList, formatDollars, formatDuration, formatEmployerIdNumber, formatFullName, formatMoney, formatMoneyInput, formatNumberTemplates, formatParagraphs, formatPercentage, formatPhoneNumber, formatSocialSecurityNumber, formatWebsite, getDisplayName, getInitials, getNameOrDefault, getOrDefault, getPercentDisplay, getPercentValue, getType, hasStringContent, hasStringOrNumberContent, inferCentury, insertIf, isFutureDate, isValidDate, isValidPastDate, mapBooleanToText, parseAndPreserveNewlines, pluralize, preserveNewLines, replaceSymbolsWithChars, splitCommaList, splitName, stripNonAlpha, toKey, varToLabel };
-//# sourceMappingURL=utils.esm.js.map
+exports.CENT_DECIMAL = CENT_DECIMAL;
+exports.DATE_FORMATS = DATE_FORMATS;
+exports.EMPTY_FIELD = EMPTY_FIELD;
+exports.RE_ALPHA = RE_ALPHA;
+exports.RE_SMALL_WORDS = RE_SMALL_WORDS;
+exports.RE_WORDS = RE_WORDS;
+exports.canReplaceSymbols = canReplaceSymbols;
+exports.createDisabledContainer = createDisabledContainer;
+exports.createGuardedContainer = createGuardedContainer;
+exports.dateToday = dateToday;
+exports.formatAddress = formatAddress;
+exports.formatAddressMultiline = formatAddressMultiline;
+exports.formatCommaSeparatedNumber = formatCommaSeparatedNumber;
+exports.formatDate = formatDate;
+exports.formatDateTime = formatDateTime;
+exports.formatDelimitedList = formatDelimitedList;
+exports.formatDollars = formatDollars;
+exports.formatDuration = formatDuration;
+exports.formatEmployerIdNumber = formatEmployerIdNumber;
+exports.formatFullName = formatFullName;
+exports.formatMoney = formatMoney;
+exports.formatMoneyInput = formatMoneyInput;
+exports.formatNumberTemplates = formatNumberTemplates;
+exports.formatParagraphs = formatParagraphs;
+exports.formatPercentage = formatPercentage;
+exports.formatPhoneNumber = formatPhoneNumber;
+exports.formatSocialSecurityNumber = formatSocialSecurityNumber;
+exports.formatWebsite = formatWebsite;
+exports.getDisplayName = getDisplayName;
+exports.getInitials = getInitials;
+exports.getNameOrDefault = getNameOrDefault;
+exports.getOrDefault = getOrDefault;
+exports.getPercentDisplay = getPercentDisplay;
+exports.getPercentValue = getPercentValue;
+exports.getType = getType;
+exports.hasStringContent = hasStringContent;
+exports.hasStringOrNumberContent = hasStringOrNumberContent;
+exports.inferCentury = inferCentury;
+exports.insertIf = insertIf;
+exports.isFutureDate = isFutureDate;
+exports.isValidDate = isValidDate;
+exports.isValidPastDate = isValidPastDate;
+exports.mapBooleanToText = mapBooleanToText;
+exports.parseAndPreserveNewlines = parseAndPreserveNewlines;
+exports.pluralize = pluralize;
+exports.preserveNewLines = preserveNewLines;
+exports.replaceSymbolsWithChars = replaceSymbolsWithChars;
+exports.splitCommaList = splitCommaList;
+exports.splitName = splitName;
+exports.stripNonAlpha = stripNonAlpha;
+exports.toKey = toKey;
+exports.varToLabel = varToLabel;
+//# sourceMappingURL=utils.cjs.development.js.map

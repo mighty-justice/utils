@@ -1,15 +1,11 @@
-/* global describe, it, expect */
 import React, { Component } from 'react';
 import { mount } from 'enzyme';
 
-import {
-  createGuardedContainer,
-  createDisabledContainer,
-} from '../src';
+import { createGuardedContainer, createDisabledContainer } from '../src';
 
 class Button extends Component {
-  render () {
-    return <button {...this.props}>{this.props.children}</button>
+  render() {
+    return <button {...this.props}>{this.props.children}</button>;
   }
 }
 
@@ -39,8 +35,8 @@ describe('createGuardedContainer', () => {
 
 describe('createDisabledContainer', () => {
   it('Renders disabled container', async () => {
-    const DisabledComponent = createDisabledContainer(Button),
-      wrapper = mount(<DisabledComponent />);
+    const DisabledComponent = createDisabledContainer(Button);
+    const wrapper = mount(<DisabledComponent />);
 
     expect(wrapper.html()).toContain('disabled');
   });
