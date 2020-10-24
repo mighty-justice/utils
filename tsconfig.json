@@ -13,6 +13,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "outDir": "./build",
     "paths": { "*": ["src/*", "node_modules/*"] },
     "rootDir": "./src",
     "sourceMap": true
