@@ -7,5 +7,5 @@ export interface IGuardedContainerProps {
     enabledComponent: React.ReactNode;
     isGuarded: boolean;
 }
-export declare function createDisabledContainer(WrappedComponent: React.ComponentClass<any>): React.ComponentClass;
+export declare function createDisabledContainer(WrappedComponent: React.ComponentType<any>): React.ComponentType;
 export declare function createGuardedContainer({ isGuarded, enabledComponent, disabledComponent, }: IGuardedContainerProps): React.ComponentClass;
