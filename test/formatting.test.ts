@@ -314,6 +314,16 @@ describe('formatting', () => {
     expect(parsedHtml[4]).toBe('hello');
   });
 
+  it('stringToHTML: converts HTML strings to HTML', () => {
+    const parsedHtml = util.stringToHTML('<div>hello<p>hello</p></div>') as JSX.Element[];
+    expect(parsedHtml[0].type).toBe('div');
+    expect(parsedHtml[1]).toBe('hello');
+    expect(parsedHtml[2].type).toBe('p');
+    expect(parsedHtml[3]).toBe('hello');
+    expect(parsedHtml[4].type).toBe('p');
+    expect(parsedHtml[5].type).toBe('div');
+  });
+
   it('formattedWebsite', () => {
     const website = 'https://www.mighty.com',
       innerText = 'innerText';
