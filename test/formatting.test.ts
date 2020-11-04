@@ -312,6 +312,23 @@ describe('formatting', () => {
     expect(parsedHtml[2].type).toBe('br');
     expect(parsedHtml[3].type).toBe('br');
     expect(parsedHtml[4]).toBe('hello');
+    expect(util.parseAndPreserveNewlines('')).toBe(EMPTY_FIELD);
+  });
+
+  it('stringToHTML: converts HTML strings to HTML', () => {
+    const parsedHtml = util.stringToHTML('<div>hello<p>hello</p></div>') as JSX.Element;
+
+    expect(parsedHtml.type).toBe('div');
+    expect(parsedHtml.props.children[0]).toBe('hello');
+    expect(parsedHtml.props.children[1].type).toBe('p');
+    expect(parsedHtml.props.children[1].props.children).toBe('hello');
+  });
+
+  it(`getDisplayName: returns a component's display name`, () => {
+    expect(util.getDisplayName({ displayName: 'test name' })).toBe('test name');
+    expect(util.getDisplayName({ name: 'test name' })).toBe('test name');
+    expect(util.getDisplayName({ hello: 'hello' })).toBe('Component');
+    expect(util.getDisplayName('')).toBe(undefined);
   });
 
   it('formattedWebsite', () => {

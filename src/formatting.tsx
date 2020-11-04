@@ -368,3 +368,7 @@ export function formatAddress(address?: IAddress | null) {
 export function formatAddressMultiline(address?: IAddress | null) {
   return parser(formatAddress(address).replace(', ', '<br/>'));
 }
+
+export function stringToHTML(string: string) {
+  return parser(string);
+}
