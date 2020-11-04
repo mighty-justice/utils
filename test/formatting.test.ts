@@ -312,7 +312,7 @@ describe('formatting', () => {
     expect(parsedHtml[2].type).toBe('br');
     expect(parsedHtml[3].type).toBe('br');
     expect(parsedHtml[4]).toBe('hello');
-    expect(util.parseAndPreserveNewlines('')).toBe(EMPTY_FIELD)
+    expect(util.parseAndPreserveNewlines('')).toBe(EMPTY_FIELD);
   });
 
   it('stringToHTML: converts HTML strings to HTML', () => {
@@ -325,9 +325,9 @@ describe('formatting', () => {
   });
 
   it(`getDisplayName: returns a component's display name`, () => {
-    expect(util.getDisplayName({displayName: 'test name'})).toBe('test name');
-    expect(util.getDisplayName({name: 'test name'})).toBe('test name');
-    expect(util.getDisplayName({hello: 'hello'})).toBe('Component');
+    expect(util.getDisplayName({ displayName: 'test name' })).toBe('test name');
+    expect(util.getDisplayName({ name: 'test name' })).toBe('test name');
+    expect(util.getDisplayName({ hello: 'hello' })).toBe('Component');
     expect(util.getDisplayName('')).toBe(undefined);
   });
 
