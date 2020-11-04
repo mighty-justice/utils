@@ -30,7 +30,16 @@ const TO_DISPLAY_ONLY: Array<[any, string]> = [
   [0.55, '55'],
 ];
 
+const INSERT_IF_TEST_CASES = [{ 1: true }, 'hello', 42, [1, 2, 3]]
+
 describe('utils', () => {
+  INSERT_IF_TEST_CASES.forEach((element) => {
+    it('Correctly inserts element based on condition', () => {
+      expect(util.insertIf(true, element)).toMatchObject([element]);
+      expect(util.insertIf(false, element)).not.toMatchObject([element]);
+    })
+  })
+
   TEST_CASES.forEach(([value, display]) => {
     it(`Correctly converts percentage between '${value}' <=> '${display}'`, () => {
       expect(util.getPercentValue(display)).toBe(value);
