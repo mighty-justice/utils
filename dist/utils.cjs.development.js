@@ -456,6 +456,9 @@ function formatAddress(address) {
 function formatAddressMultiline(address) {
   return parser(formatAddress(address).replace(', ', '<br/>'));
 }
+function stringToHTML(string) {
+  return parser(string);
+}
 
 function createDisabledContainer(WrappedComponent) {
   var DisabledContainer = /*#__PURE__*/function (_Component) {
@@ -627,6 +630,7 @@ exports.preserveNewLines = preserveNewLines;
 exports.replaceSymbolsWithChars = replaceSymbolsWithChars;
 exports.splitCommaList = splitCommaList;
 exports.splitName = splitName;
+exports.stringToHTML = stringToHTML;
 exports.stripNonAlpha = stripNonAlpha;
 exports.toKey = toKey;
 exports.varToLabel = varToLabel;

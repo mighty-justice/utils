@@ -449,6 +449,9 @@ function formatAddress(address) {
 function formatAddressMultiline(address) {
   return parser(formatAddress(address).replace(', ', '<br/>'));
 }
+function stringToHTML(string) {
+  return parser(string);
+}
 
 function createDisabledContainer(WrappedComponent) {
   var DisabledContainer = /*#__PURE__*/function (_Component) {
@@ -571,5 +574,5 @@ function isValidPastDate(value) {
   ;
 }
 
-export { CENT_DECIMAL, DATE_FORMATS, EMPTY_FIELD, RE_ALPHA, RE_SMALL_WORDS, RE_WORDS, canReplaceSymbols, createDisabledContainer, createGuardedContainer, dateToday, formatAddress, formatAddressMultiline, formatCommaSeparatedNumber, formatDate, formatDateTime, formatDelimitedList, formatDollars, formatDuration, formatEmployerIdNumber, formatFullName, formatMoney, formatMoneyInput, formatNumberTemplates, formatParagraphs, formatPercentage, formatPhoneNumber, formatSocialSecurityNumber, formatWebsite, getDisplayName, getInitials, getNameOrDefault, getOrDefault, getPercentDisplay, getPercentValue, getType, hasStringContent, hasStringOrNumberContent, inferCentury, insertIf, isFutureDate, isValidDate, isValidPastDate, mapBooleanToText, parseAndPreserveNewlines, pluralize, preserveNewLines, replaceSymbolsWithChars, splitCommaList, splitName, stripNonAlpha, toKey, varToLabel };
+export { CENT_DECIMAL, DATE_FORMATS, EMPTY_FIELD, RE_ALPHA, RE_SMALL_WORDS, RE_WORDS, canReplaceSymbols, createDisabledContainer, createGuardedContainer, dateToday, formatAddress, formatAddressMultiline, formatCommaSeparatedNumber, formatDate, formatDateTime, formatDelimitedList, formatDollars, formatDuration, formatEmployerIdNumber, formatFullName, formatMoney, formatMoneyInput, formatNumberTemplates, formatParagraphs, formatPercentage, formatPhoneNumber, formatSocialSecurityNumber, formatWebsite, getDisplayName, getInitials, getNameOrDefault, getOrDefault, getPercentDisplay, getPercentValue, getType, hasStringContent, hasStringOrNumberContent, inferCentury, insertIf, isFutureDate, isValidDate, isValidPastDate, mapBooleanToText, parseAndPreserveNewlines, pluralize, preserveNewLines, replaceSymbolsWithChars, splitCommaList, splitName, stringToHTML, stripNonAlpha, toKey, varToLabel };
 //# sourceMappingURL=utils.esm.js.map

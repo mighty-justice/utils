@@ -42,3 +42,4 @@ export declare function toKey(dict: {
 }): string;
 export declare function formatAddress(address?: IAddress | null): string;
 export declare function formatAddressMultiline(address?: IAddress | null): any;
+export declare function stringToHTML(string: string): any;
