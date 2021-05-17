@@ -110,6 +110,9 @@ export function formatDate(value?: string | null, dateFormat = DATE_FORMATS.date
 }
 
 export function formatDateTime(value?: string | null, symbol: string = '@') {
+  if (!hasStringContent(value)) {
+    return EMPTY_FIELD;
+  }
   return `${formatDate(value, DATE_FORMATS.date)} ${symbol} ${formatDate(value, DATE_FORMATS.time)}`
 }
 
