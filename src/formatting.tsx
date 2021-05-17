@@ -113,7 +113,7 @@ export function formatDateTime(value?: string | null, symbol: string = '@') {
   if (!hasStringContent(value)) {
     return EMPTY_FIELD;
   }
-  return `${formatDate(value, DATE_FORMATS.date)} ${symbol} ${formatDate(value, DATE_FORMATS.time)}`
+  return `${formatDate(value, DATE_FORMATS.date)} ${symbol} ${formatDate(value, DATE_FORMATS.time)}`;
 }
 
 export function getNameOrDefault(obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {

@@ -2,7 +2,7 @@ import Decimal from 'decimal.js';
 
 export const EMPTY_FIELD = '--';
 
-export const DATE_FORMATS: { date: string; date_value: string; time: string; } = {
+export const DATE_FORMATS: { date: string; date_value: string; time: string } = {
   date: 'MM/DD/YY',
   date_value: 'YYYY-MM-DD',
   time: 'h:mmA', // ex. 2:24PM
