@@ -109,8 +109,8 @@ export function formatDate(value?: string | null, dateFormat = DATE_FORMATS.date
   return dateFnsFormat(value, dateFormat);
 }
 
-export function formatDateTime(value?: string | null) {
-  return formatDate(value, DATE_FORMATS.date_at_time);
+export function formatDateTime(value?: string | null, symbol: string = '@') {
+  return `${formatDate(value, DATE_FORMATS.date)} ${symbol} ${formatDate(value, DATE_FORMATS.time)}`
 }
 
 export function getNameOrDefault(obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {

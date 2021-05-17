@@ -220,6 +220,7 @@ describe('formatting', () => {
 
   it('formatDateTime', () => {
     expect(util.formatDateTime('2008-09-22T13:57:31.2311892')).toBe('09/22/08 @ 1:57PM');
+    expect(util.formatDateTime('2008-09-22T13:57:31.2311892', 'at')).toBe('09/22/08 at 1:57PM');
   });
 
   it('mapBooleanToText: Maps booleans to yes and no', () => {
