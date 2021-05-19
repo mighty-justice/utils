@@ -19,7 +19,3 @@ jobs:
     - stage: Produce Coverage
       node_js: 10
       script: yarn test --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
-
-branches:
-  only:
-  - master
