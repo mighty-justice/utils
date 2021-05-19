@@ -8,3 +8,6 @@ updates:
   target-branch: frontend-bumps
   ignore:
   - dependency-name: np
+  automerged_updates:
+    - match:
+        dependency_type: "all"
