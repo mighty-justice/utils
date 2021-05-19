@@ -84,8 +84,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "source-map-explorer": "^2.5.0",
-    "tsdx": "^0.13.3",
-    "typescript": "^3.0.0"
+    "tsdx": "^0.13.3"
   },
   "dependencies": {
     "classnames": "^2.2.6",
