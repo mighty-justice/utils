@@ -1,6 +1,6 @@
 import React from 'react';
 import { parse } from 'iso8601-duration';
-import { format as dateFnsFormat } from 'date-fns';
+import { format as dateFnsFormat, parseISO } from 'date-fns';
 import numeral from 'numeral';
 import parser from 'html-react-parser';
 import memoize from 'fast-memoize';
@@ -106,7 +106,7 @@ export function formatDate(value?: string | null, dateFormat = DATE_FORMATS.date
   if (!hasStringContent(value)) {
     return EMPTY_FIELD;
   }
-  return dateFnsFormat(value, dateFormat);
+  return dateFnsFormat(parseISO(value), dateFormat);
 }
 
 export function formatDateTime(value?: string | null) {
