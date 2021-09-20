@@ -13,7 +13,7 @@ const TEST_CASES: Array<[string, string]> = [
 ];
 
 // display => value
-const TO_VALUE_ONLY: Array<[any, string]> = [
+const TO_VALUE_ONLY: Array<[unknown, string]> = [
   [undefined, ''],
   [null, ''],
   [1, '0.01'],
@@ -22,7 +22,7 @@ const TO_VALUE_ONLY: Array<[any, string]> = [
 ];
 
 // value => display
-const TO_DISPLAY_ONLY: Array<[any, string]> = [
+const TO_DISPLAY_ONLY: Array<[unknown, string]> = [
   [undefined, ''],
   [null, ''],
   [1, '100'],
