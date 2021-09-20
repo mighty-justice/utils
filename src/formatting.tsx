@@ -125,7 +125,7 @@ export function getNameOrDefault(obj?: unknown, { field = 'name', defaultValue =
   return defaultValue;
 }
 
-export function getOrDefault(value?: any) {
+export function getOrDefault(value?: unknown) {
   const isUndefined = value === undefined,
     isNull = value === null,
     isEmptyString = isString(value) && !hasStringContent(value);

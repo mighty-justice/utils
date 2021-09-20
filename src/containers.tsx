@@ -2,12 +2,12 @@
 import React, { Component } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import cx from 'classnames';
+import cx, { Argument as IClassName } from 'classnames';
 
 import { getDisplayName } from './formatting';
 
 export interface IDisabledContainerProps {
-  className?: any;
+  className?: IClassName;
 }
 
 export interface IGuardedContainerProps {
