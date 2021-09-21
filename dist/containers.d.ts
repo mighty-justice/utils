@@ -1,6 +1,7 @@
 import React from 'react';
+import { Argument as IClassName } from 'classnames';
 export interface IDisabledContainerProps {
-    className?: any;
+    className?: IClassName;
 }
 export interface IGuardedContainerProps {
     disabledComponent: React.ReactNode;

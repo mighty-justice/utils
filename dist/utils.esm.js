@@ -5,7 +5,7 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import cx from 'classnames';
 import { parse } from 'iso8601-duration';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import numeral from 'numeral';
 import parser from 'html-react-parser';
 import memoize from 'fast-memoize';
@@ -14,9 +14,9 @@ import moment from 'moment';
 
 var EMPTY_FIELD = '--';
 var DATE_FORMATS = {
-  date: 'MM/DD/YY',
-  date_at_time: 'MM/DD/YY @ h:mmA',
-  date_value: 'YYYY-MM-DD'
+  date: 'LL/dd/yy',
+  date_at_time: 'LL/dd/yy @ h:mma',
+  date_value: 'yyyy-LL-dd'
 };
 var CENT_DECIMAL = /*#__PURE__*/new Decimal('100');
 var RE_ALPHA = /[^A-Za-z]/g;
@@ -42,7 +42,17 @@ function _createClass(Constructor, protoProps, staticProps) {
 function _inheritsLoose(subClass, superClass) {
   subClass.prototype = Object.create(superClass.prototype);
   subClass.prototype.constructor = subClass;
-  subClass.__proto__ = superClass;
+
+  _setPrototypeOf(subClass, superClass);
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
 }
 
 function _unsupportedIterableToArray(o, minLen) {
@@ -63,28 +73,24 @@ function _arrayLikeToArray(arr, len) {
 }
 
 function _createForOfIteratorHelperLoose(o, allowArrayLike) {
-  var it;
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+  if (it) return (it = it.call(o)).next.bind(it);
 
-  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
-    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-      if (it) o = it;
-      var i = 0;
-      return function () {
-        if (i >= o.length) return {
-          done: true
-        };
-        return {
-          done: false,
-          value: o[i++]
-        };
+  if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+    if (it) o = it;
+    var i = 0;
+    return function () {
+      if (i >= o.length) return {
+        done: true
       };
-    }
-
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+      return {
+        done: false,
+        value: o[i++]
+      };
+    };
   }
 
-  it = o[Symbol.iterator]();
-  return it.next.bind(it);
+  throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 function canReplaceSymbols(template, chars) {
@@ -169,7 +175,7 @@ function formatDate(value, dateFormat) {
     return EMPTY_FIELD;
   }
 
-  return format(value, dateFormat);
+  return format(parseISO(value), dateFormat);
 }
 function formatDateTime(value) {
   return formatDate(value, DATE_FORMATS.date_at_time);
@@ -549,15 +555,20 @@ function inferCentury(year) {
 function insertIf(condition, element) {
   return condition ? [element] : [];
 }
+
+function _convertibleToDecimalObject(value) {
+  return isString(value) && value !== '' || isNumber(value) || Decimal.isDecimal(value);
+}
+
 function getPercentValue(value) {
-  if (typeof value === 'undefined' || value === null || value === '') {
+  if (!_convertibleToDecimalObject(value)) {
     return '';
   }
 
   return new Decimal(value).div(CENT_DECIMAL).toString();
 }
 function getPercentDisplay(value) {
-  if (typeof value === 'undefined' || value === null || value === '') {
+  if (!_convertibleToDecimalObject(value)) {
     return '';
   }
 

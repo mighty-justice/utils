@@ -1,3 +1,3 @@
-export declare function insertIf(condition: boolean, element: any): any[];
-export declare function getPercentValue(value?: null | string): string;
-export declare function getPercentDisplay(value?: null | string): string;
+export declare function insertIf<T>(condition: boolean, element: T): T[];
+export declare function getPercentValue(value?: unknown): string;
+export declare function getPercentDisplay(value?: unknown): string;

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { IAddress } from './interfaces';
 export declare function canReplaceSymbols(template: string, chars: string[]): boolean;
 export declare function replaceSymbolsWithChars(template: string, chars: string[]): string;
@@ -14,7 +15,7 @@ export declare function getNameOrDefault(obj?: unknown, { field, defaultValue }?
     field?: string;
     defaultValue?: string;
 }): any;
-export declare function getOrDefault(value?: any): any;
+export declare function getOrDefault(value?: unknown): unknown;
 export declare function formatSocialSecurityNumber(value?: null | string): string;
 export declare function formatEmployerIdNumber(value?: null | string): string;
 export declare function formatPercentage(value?: null | number | string, decimalPoints?: number): string;
@@ -22,7 +23,7 @@ export declare function formatMoney(value?: null | number | string): string;
 export declare function formatDollars(value?: null | number | string): string;
 export declare function formatParagraphs(value?: null | string): "--" | JSX.Element[];
 export declare function formatCommaSeparatedNumber(value?: null | number | string): string;
-export declare function formatDelimitedList(list?: null | string[], delimiter?: string): any;
+export declare function formatDelimitedList(list?: null | string[], delimiter?: string): unknown;
 export declare function mapBooleanToText(bool?: boolean | null, { mapUndefinedToNo }?: {
     mapUndefinedToNo: boolean;
 }): "--" | "Yes" | "No";
