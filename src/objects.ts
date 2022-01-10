@@ -56,8 +56,6 @@ function _flattenObject<T> (input: T, prev: string, currentDepth: number): Flatt
   }, {});
 }
 
-// This is an alteration of flat's flattenObject function
-// that includes has the ability to handle Moment objects.
 function flattenObject<T extends object> (input: T): Flatten<T> {
   return _flattenObject(input, '', 1);
 }
