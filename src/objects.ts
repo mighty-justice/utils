@@ -1,7 +1,7 @@
 import { flatten as flattenArray, isArray, isPlainObject, set } from 'lodash';
 
 
-// Types sourced from
+// Complex types sourced from
 // https://flut1.medium.com/deep-flatten-typescript-types-with-finite-recursion-cb79233d93ca
 
 type NonObjectKeysOf<T> = {
@@ -30,16 +30,29 @@ function mergeObjects<A extends object, B extends object> (objectA: A, objectB: 
   return { ...objectA, ...objectB };
 }
 
-function _flattenObject<T> (input: T, prev: string, currentDepth: number): Flatten<T> {
-  return Object.entries(input).reduce((output: Flatten<T>, [key, value]) => {
-    const newKey = isArray(input) ? (prev ? `${prev}[${key}]` : key) : (prev ? `${prev}.${key}` : key);
+const _hasUnflattenedValues = (value: unknown): boolean => {
+  return (
+    (isArray(value) || isPlainObject(value))
+    && !!Object.keys(value).length
+  )
+}
 
-    if ((isArray(value) || isPlainObject(value)) && Object.keys(value).length) {
-      const flatValues = _flattenObject(value, newKey, currentDepth + 1);
+function _flattenObject<T> (input: T, prev: string, currentDepth: number): Flatten<T> {
+  const _getFlatKey = (key: string) => {
+    if (isArray(input)) { return `${prev}[${key}]`; }
+    if (prev) { return `${prev}.${key}`; }
+    return key;
+  };
+
+  return Object.entries(input).reduce((output: Flatten<T>, [key, value]) => {
+    const flatKey = _getFlatKey(key);
+
+    if (_hasUnflattenedValues(value)) {
+      const flatValues = _flattenObject(value, flatKey, currentDepth + 1);
       return mergeObjects(output, flatValues);
     }
 
-    return mergeObjects(output, { [newKey]: value });
+    return mergeObjects(output, { [flatKey]: value });
   }, {});
 }
 
@@ -50,9 +63,9 @@ function flattenObject<T extends object> (input: T): Flatten<T> {
 }
 
 function unflattenObject (object: Object) {
-  const flattenedObject = flattenObject(object);
-
-  return Object.entries(flattenedObject).reduce((objOut, [key, value]) => set(objOut, key, value), {});
+  return Object
+    .entries(flattenObject(object))
+    .reduce((objOut, [key, value]) => set(objOut, key, value), {});
 }
 
 export {
