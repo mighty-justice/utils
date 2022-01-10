@@ -23,14 +23,16 @@ const _hasUnflattenedValues = (value: unknown): boolean => {
   return (isArray(value) || isPlainObject(value)) && !!Object.keys(value).length;
 };
 
-function _flattenObject<T>(input: T, prev: string, currentDepth: number): Flatten<T> {
+function _flattenObject<T>(input: T, parentKey: string): Flatten<T> {
   const _getFlatKey = (key: string) => {
     if (isArray(input)) {
-      return `${prev}[${key}]`;
+      return `${parentKey}[${key}]`;
     }
-    if (prev) {
-      return `${prev}.${key}`;
+
+    if (parentKey) {
+      return `${parentKey}.${key}`;
     }
+
     return key;
   };
 
@@ -38,7 +40,7 @@ function _flattenObject<T>(input: T, prev: string, currentDepth: number): Flatte
     const flatKey = _getFlatKey(key);
 
     if (_hasUnflattenedValues(value)) {
-      const flatValues = _flattenObject(value, flatKey, currentDepth + 1);
+      const flatValues = _flattenObject(value, flatKey);
       return mergeObjects(output, flatValues);
     }
 
@@ -47,7 +49,7 @@ function _flattenObject<T>(input: T, prev: string, currentDepth: number): Flatte
 }
 
 function flattenObject<T extends object>(input: T): Flatten<T> {
-  return _flattenObject(input, '', 1);
+  return _flattenObject(input, '');
 }
 
 function unflattenObject(object: Object) {
