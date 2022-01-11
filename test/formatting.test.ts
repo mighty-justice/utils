@@ -163,8 +163,8 @@ describe('formatting', () => {
   it('getOrDefault', () => {
     expect(util.getOrDefault('Hello')).toBe('Hello');
     expect(util.getOrDefault('Hello                     ')).toBe('Hello');
-    expect(util.getOrDefault(123)).toBe(123);
-    expect(util.getOrDefault(0)).toBe(0);
+    expect(util.getOrDefault(123)).toBe('123');
+    expect(util.getOrDefault(0)).toBe('0');
   });
 
   it('formatSocialSecurityNumber', () => {
