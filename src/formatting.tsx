@@ -262,7 +262,7 @@ export function getType(fullType?: null | string): string {
   return type || fullType;
 }
 
-export function preserveNewLines(body: string): React.ReactNode {
+export function preserveNewLines(body: string): string {
   return body.replace(/\n/g, '<br/>');
 }
 
