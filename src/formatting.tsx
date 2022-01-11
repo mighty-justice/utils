@@ -29,7 +29,7 @@ export function canReplaceSymbols(template: string, chars: string[]): boolean {
   return template.split('#').length - 1 === chars.length;
 }
 
-export function replaceSymbolsWithChars(template: string, chars: string[]) {
+export function replaceSymbolsWithChars(template: string, chars: string[]): string {
   const charsReverse = chars.reverse();
 
   return template
@@ -42,6 +42,7 @@ export function hasStringContent(value: unknown): value is string {
   if (!isString(value)) {
     return false;
   }
+
   return !!value.replace(/ /g, '').length;
 }
 
@@ -49,7 +50,7 @@ export function hasStringOrNumberContent(value: unknown): value is number | stri
   return hasStringContent(value) || isNumber(value);
 }
 
-export function splitName(name?: string | null) {
+export function splitName(name?: string | null): [string, string] {
   if (!hasStringContent(name)) {
     return ['', ''];
   }
@@ -58,7 +59,7 @@ export function splitName(name?: string | null) {
   return [firstName, lastName.join(' ').trim()];
 }
 
-export function splitCommaList(str?: string | null) {
+export function splitCommaList(str?: string | null): string[] {
   if (!hasStringContent(str)) {
     return [];
   }
@@ -73,11 +74,11 @@ export function splitCommaList(str?: string | null) {
     .filter(v => v !== '');
 }
 
-export function formatFullName(firstName?: string, lastName?: string) {
+export function formatFullName(firstName?: string, lastName?: string): string {
   return `${firstName || ''} ${lastName || ''}`.trim();
 }
 
-export function formatNumberTemplates(value: undefined | string | null, templates: string[]) {
+export function formatNumberTemplates(value: undefined | string | null, templates: string[]): string {
   if (!hasStringContent(value)) {
     return EMPTY_FIELD;
   }
@@ -98,22 +99,22 @@ export function formatNumberTemplates(value: undefined | string | null, template
   return value;
 }
 
-export function formatPhoneNumber(value?: string | null) {
+export function formatPhoneNumber(value?: string | null): string {
   return formatNumberTemplates(value, ['###-####', '(###) ###-####', '+# (###) ###-####', '+## (###) ###-####']);
 }
 
-export function formatDate(value?: string | null, dateFormat = DATE_FORMATS.date) {
+export function formatDate(value?: string | null, dateFormat = DATE_FORMATS.date): string {
   if (!hasStringContent(value)) {
     return EMPTY_FIELD;
   }
   return dateFnsFormat(parseISO(value), dateFormat);
 }
 
-export function formatDateTime(value?: string | null) {
+export function formatDateTime(value?: string | null): string {
   return formatDate(value, DATE_FORMATS.date_at_time);
 }
 
-export function getNameOrDefault(obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}) {
+export function getNameOrDefault(obj?: unknown, { field = 'name', defaultValue = EMPTY_FIELD } = {}): string {
   if (obj) {
     if (has(obj, 'first_name')) {
       return `${result(obj, 'first_name', '')} ${result(obj, 'last_name', '')}`.trim();
@@ -125,31 +126,27 @@ export function getNameOrDefault(obj?: unknown, { field = 'name', defaultValue =
   return defaultValue;
 }
 
-export function getOrDefault(value?: unknown) {
-  const isUndefined = value === undefined,
-    isNull = value === null,
-    isEmptyString = isString(value) && !hasStringContent(value);
-
-  if (isUndefined || isNull || isEmptyString) {
-    return EMPTY_FIELD;
-  }
-
-  if (isString(value)) {
+export function getOrDefault(value?: unknown): string {
+  if (hasStringContent(value)) {
     return value.trim();
   }
 
-  return value;
+  if (isNumber(value)) {
+    return String(value);
+  }
+
+  return EMPTY_FIELD;
 }
 
-export function formatSocialSecurityNumber(value?: null | string) {
+export function formatSocialSecurityNumber(value?: null | string): string {
   return formatNumberTemplates(value, ['####', '###-##-####']);
 }
 
-export function formatEmployerIdNumber(value?: null | string) {
+export function formatEmployerIdNumber(value?: null | string): string {
   return formatNumberTemplates(value, ['##-#######']);
 }
 
-export function formatPercentage(value?: null | number | string, decimalPoints = 2) {
+export function formatPercentage(value?: null | number | string, decimalPoints = 2): string {
   if (!hasStringOrNumberContent(value)) {
     return EMPTY_FIELD;
   }
@@ -160,42 +157,42 @@ export function formatPercentage(value?: null | number | string, decimalPoints =
   return numeral(value).format(formattingString);
 }
 
-export function formatMoney(value?: null | number | string) {
+export function formatMoney(value?: null | number | string): string {
   if (!hasStringOrNumberContent(value)) {
     return EMPTY_FIELD;
   }
   return numeral(value).format('$0,0.00');
 }
 
-export function formatDollars(value?: null | number | string) {
+export function formatDollars(value?: null | number | string): string {
   if (!hasStringOrNumberContent(value)) {
     return EMPTY_FIELD;
   }
   return numeral(value).format('$0,0');
 }
 
-export function formatParagraphs(value?: null | string) {
+export function formatParagraphs(value?: null | string): string | React.ReactNode[] {
   if (!hasStringContent(value)) {
     return EMPTY_FIELD;
   }
   return value.split(/\r?\n/).map((s, i) => <p key={i}>{s}</p>);
 }
 
-export function formatCommaSeparatedNumber(value?: null | number | string) {
+export function formatCommaSeparatedNumber(value?: null | number | string): string {
   if (!hasStringOrNumberContent(value)) {
     return EMPTY_FIELD;
   }
   return numeral(value).format('0,0');
 }
 
-export function formatDelimitedList(list?: null | string[], delimiter = ', ') {
+export function formatDelimitedList(list?: null | string[], delimiter = ', '): string {
   if (!list) {
     return EMPTY_FIELD;
   }
   return getOrDefault(list.join(delimiter));
 }
 
-export function mapBooleanToText(bool?: boolean | null, { mapUndefinedToNo } = { mapUndefinedToNo: false }) {
+export function mapBooleanToText(bool?: boolean | null, { mapUndefinedToNo } = { mapUndefinedToNo: false }): string {
   if (isBoolean(bool)) {
     return bool ? 'Yes' : 'No';
   }
@@ -207,14 +204,14 @@ export function mapBooleanToText(bool?: boolean | null, { mapUndefinedToNo } = {
   return EMPTY_FIELD;
 }
 
-export function formatMoneyInput(value?: null | number | string) {
+export function formatMoneyInput(value?: null | number | string): number {
   if (!hasStringOrNumberContent(value)) {
     return value;
   }
   return numeral(value).value();
 }
 
-export function formatDuration(iso8601?: null | string) {
+export function formatDuration(iso8601?: null | string): string {
   if (!hasStringContent(iso8601)) {
     return EMPTY_FIELD;
   }
@@ -237,7 +234,7 @@ export function formatDuration(iso8601?: null | string) {
   return unitCountsHuman.map(([unit, count]) => `${count} ${unit}`).join(', ');
 }
 
-export function formatWebsite(website?: string | null, text?: string): string | JSX.Element {
+export function formatWebsite(website?: string | null, text?: string): React.ReactNode {
   if (!hasStringContent(website)) {
     return EMPTY_FIELD;
   }
@@ -249,27 +246,27 @@ export function formatWebsite(website?: string | null, text?: string): string | 
   );
 }
 
-export function stripNonAlpha(str?: string | null) {
+export function stripNonAlpha(str?: string | null): string {
   if (!hasStringContent(str)) {
     return '';
   }
   return str.replace(RE_ALPHA, '');
 }
 
-export function pluralize(baseWord: string, pluralSuffix: string, count: number) {
+export function pluralize(baseWord: string, pluralSuffix: string, count: number): string {
   return count === 1 ? baseWord : `${baseWord}${pluralSuffix}`;
 }
 
-export function getType(fullType?: null | string) {
+export function getType(fullType?: null | string): string {
   const type = fullType && fullType.split('.')[1];
   return type || fullType;
 }
 
-export function preserveNewLines(body: string) {
+export function preserveNewLines(body: string): string {
   return body.replace(/\n/g, '<br/>');
 }
 
-export function parseAndPreserveNewlines(body?: string) {
+export function parseAndPreserveNewlines(body?: string): React.ReactNode {
   if (!hasStringContent(body)) {
     return EMPTY_FIELD;
   }
@@ -283,15 +280,15 @@ export function getDisplayName(component: any): string | undefined {
   return component.displayName || component.name || 'Component';
 }
 
-function _hasSmallWords(value: string) {
+function _hasSmallWords(value: string): boolean {
   return value.search(RE_SMALL_WORDS) > -1;
 }
 
-function _varToLabel(value: string) {
-  const suffix = value.split('.').pop() || '',
-    formatted = startCase(suffix),
-    wordArray = formatted.match(RE_WORDS) || [],
-    notOnlyWord = wordArray.length > 1;
+function _varToLabel(value: string): string {
+  const suffix: string = value.split('.').pop() || '',
+    formatted: string = startCase(suffix),
+    wordArray: string[] = formatted.match(RE_WORDS) || [],
+    notOnlyWord: boolean = wordArray.length > 1;
 
   return wordArray
     .map((match: string, index: number) => {
@@ -308,16 +305,16 @@ function _varToLabel(value: string) {
 
 export const varToLabel: (str: string) => string = memoize(_varToLabel);
 
-export function getInitials(value?: string | null) {
+export function getInitials(value?: string | null): string {
   if (!hasStringContent(value)) {
     return '';
   }
 
   const MAX_CHARS = 3,
-    prefix = value.split(',')[0] || '',
-    formatted = startCase(prefix),
-    isValueAllCaps = formatted === upperCase(formatted),
-    wordArray = formatted.match(RE_WORDS) || [];
+    prefix: string = value.split(',')[0],
+    formatted: string = startCase(prefix),
+    isValueAllCaps: boolean = formatted === upperCase(formatted),
+    wordArray: string[] = formatted.match(RE_WORDS);
 
   return wordArray
     .map((word: string) => {
@@ -335,7 +332,7 @@ export function getInitials(value?: string | null) {
     .substring(0, MAX_CHARS);
 }
 
-export function toKey(dict: { [key: string]: any }) {
+export function toKey(dict: { [key: string]: any }): string {
   const dictSorted = sortBy(map(dict, (value: any, key: string) => [key, value])),
     dictFiltered = reject(dictSorted, ([_key, value]: [string, any]) => value === null || value === undefined) as Array<
       [string, any]
@@ -352,7 +349,7 @@ export function toKey(dict: { [key: string]: any }) {
   return `?${dictString}`;
 }
 
-export function formatAddress(address?: IAddress | null) {
+export function formatAddress(address?: IAddress | null): string {
   if (!address) {
     return '--, --, -- --';
   }
@@ -365,10 +362,10 @@ export function formatAddress(address?: IAddress | null) {
   return `${joinedAddress}, ${city}, ${state} ${zip_code}`;
 }
 
-export function formatAddressMultiline(address?: IAddress | null) {
+export function formatAddressMultiline(address?: IAddress | null): React.ReactNode {
   return parser(formatAddress(address).replace(', ', '<br/>'));
 }
 
-export function stringToHTML(string: string) {
+export function stringToHTML(string: string): React.ReactNode {
   return parser(string);
 }
