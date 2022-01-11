@@ -43,7 +43,28 @@ function _defineProperties(target, props) {
 function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
   return Constructor;
+}
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
 }
 
 function _inheritsLoose(subClass, superClass) {
@@ -207,19 +228,15 @@ function getNameOrDefault(obj, _temp) {
   return defaultValue;
 }
 function getOrDefault(value) {
-  var isUndefined = value === undefined,
-      isNull = value === null,
-      isEmptyString = lodash.isString(value) && !hasStringContent(value);
-
-  if (isUndefined || isNull || isEmptyString) {
-    return EMPTY_FIELD;
-  }
-
-  if (lodash.isString(value)) {
+  if (hasStringContent(value)) {
     return value.trim();
   }
 
-  return value;
+  if (lodash.isNumber(value)) {
+    return String(value);
+  }
+
+  return EMPTY_FIELD;
 }
 function formatSocialSecurityNumber(value) {
   return formatNumberTemplates(value, ['####', '###-##-####']);
@@ -405,10 +422,10 @@ function getInitials(value) {
   }
 
   var MAX_CHARS = 3,
-      prefix = value.split(',')[0] || '',
+      prefix = value.split(',')[0],
       formatted = lodash.startCase(prefix),
       isValueAllCaps = formatted === lodash.upperCase(formatted),
-      wordArray = formatted.match(RE_WORDS) || [];
+      wordArray = formatted.match(RE_WORDS);
   return wordArray.map(function (word) {
     var isWordAllCaps = word === lodash.upperCase(word);
 
@@ -592,6 +609,63 @@ function isValidPastDate(value) {
   ;
 }
 
+function mergeObjects(objectA, objectB) {
+  return _extends({}, objectA, objectB);
+}
+
+var _hasUnflattenedValues = function _hasUnflattenedValues(value) {
+  return (lodash.isArray(value) || lodash.isPlainObject(value)) && !!Object.keys(value).length;
+};
+
+function _flattenObject(input, parentKey) {
+  var _getFlatKey = function _getFlatKey(key) {
+    if (lodash.isArray(input)) {
+      return parentKey + "[" + key + "]";
+    }
+
+    if (parentKey) {
+      return parentKey + "." + key;
+    }
+
+    return key;
+  };
+
+  return Object.entries(input).reduce(function (output, _ref) {
+    var _mergeObjects;
+
+    var key = _ref[0],
+        value = _ref[1];
+
+    var flatKey = _getFlatKey(key);
+
+    if (_hasUnflattenedValues(value)) {
+      var flatValues = _flattenObject(value, flatKey);
+
+      return mergeObjects(output, flatValues);
+    }
+
+    return mergeObjects(output, (_mergeObjects = {}, _mergeObjects[flatKey] = value, _mergeObjects));
+  }, {});
+}
+
+function flattenObject(input) {
+  return _flattenObject(input, '');
+}
+
+function unflattenObject(object) {
+  return Object.entries(flattenObject(object)).reduce(function (objOut, _ref2) {
+    var key = _ref2[0],
+        value = _ref2[1];
+    return lodash.set(objOut, key, value);
+  }, {});
+}
+
+Object.defineProperty(exports, 'flattenArray', {
+  enumerable: true,
+  get: function () {
+    return lodash.flatten;
+  }
+});
 exports.CENT_DECIMAL = CENT_DECIMAL;
 exports.DATE_FORMATS = DATE_FORMATS;
 exports.EMPTY_FIELD = EMPTY_FIELD;
@@ -602,6 +676,7 @@ exports.canReplaceSymbols = canReplaceSymbols;
 exports.createDisabledContainer = createDisabledContainer;
 exports.createGuardedContainer = createGuardedContainer;
 exports.dateToday = dateToday;
+exports.flattenObject = flattenObject;
 exports.formatAddress = formatAddress;
 exports.formatAddressMultiline = formatAddressMultiline;
 exports.formatCommaSeparatedNumber = formatCommaSeparatedNumber;
@@ -644,5 +719,6 @@ exports.splitName = splitName;
 exports.stringToHTML = stringToHTML;
 exports.stripNonAlpha = stripNonAlpha;
 exports.toKey = toKey;
+exports.unflattenObject = unflattenObject;
 exports.varToLabel = varToLabel;
 //# sourceMappingURL=utils.cjs.development.js.map

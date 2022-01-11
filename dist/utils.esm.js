@@ -9,7 +9,8 @@ import { format, parseISO } from 'date-fns';
 import numeral from 'numeral';
 import parser from 'html-react-parser';
 import memoize from 'fast-memoize';
-import { isString, isNumber, has, result, get, times, isBoolean, escape, startCase, upperCase, sortBy, map, reject, mapValues } from 'lodash-es';
+import { isString, isNumber, has, result, get, times, isBoolean, escape, startCase, upperCase, sortBy, map, reject, mapValues, isArray, isPlainObject, set } from 'lodash-es';
+export { flatten as flattenArray } from 'lodash-es';
 import moment from 'moment';
 
 var EMPTY_FIELD = '--';
@@ -36,7 +37,28 @@ function _defineProperties(target, props) {
 function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
   return Constructor;
+}
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
 }
 
 function _inheritsLoose(subClass, superClass) {
@@ -200,19 +222,15 @@ function getNameOrDefault(obj, _temp) {
   return defaultValue;
 }
 function getOrDefault(value) {
-  var isUndefined = value === undefined,
-      isNull = value === null,
-      isEmptyString = isString(value) && !hasStringContent(value);
-
-  if (isUndefined || isNull || isEmptyString) {
-    return EMPTY_FIELD;
-  }
-
-  if (isString(value)) {
+  if (hasStringContent(value)) {
     return value.trim();
   }
 
-  return value;
+  if (isNumber(value)) {
+    return String(value);
+  }
+
+  return EMPTY_FIELD;
 }
 function formatSocialSecurityNumber(value) {
   return formatNumberTemplates(value, ['####', '###-##-####']);
@@ -398,10 +416,10 @@ function getInitials(value) {
   }
 
   var MAX_CHARS = 3,
-      prefix = value.split(',')[0] || '',
+      prefix = value.split(',')[0],
       formatted = startCase(prefix),
       isValueAllCaps = formatted === upperCase(formatted),
-      wordArray = formatted.match(RE_WORDS) || [];
+      wordArray = formatted.match(RE_WORDS);
   return wordArray.map(function (word) {
     var isWordAllCaps = word === upperCase(word);
 
@@ -585,5 +603,56 @@ function isValidPastDate(value) {
   ;
 }
 
-export { CENT_DECIMAL, DATE_FORMATS, EMPTY_FIELD, RE_ALPHA, RE_SMALL_WORDS, RE_WORDS, canReplaceSymbols, createDisabledContainer, createGuardedContainer, dateToday, formatAddress, formatAddressMultiline, formatCommaSeparatedNumber, formatDate, formatDateTime, formatDelimitedList, formatDollars, formatDuration, formatEmployerIdNumber, formatFullName, formatMoney, formatMoneyInput, formatNumberTemplates, formatParagraphs, formatPercentage, formatPhoneNumber, formatSocialSecurityNumber, formatWebsite, getDisplayName, getInitials, getNameOrDefault, getOrDefault, getPercentDisplay, getPercentValue, getType, hasStringContent, hasStringOrNumberContent, inferCentury, insertIf, isFutureDate, isValidDate, isValidPastDate, mapBooleanToText, parseAndPreserveNewlines, pluralize, preserveNewLines, replaceSymbolsWithChars, splitCommaList, splitName, stringToHTML, stripNonAlpha, toKey, varToLabel };
+function mergeObjects(objectA, objectB) {
+  return _extends({}, objectA, objectB);
+}
+
+var _hasUnflattenedValues = function _hasUnflattenedValues(value) {
+  return (isArray(value) || isPlainObject(value)) && !!Object.keys(value).length;
+};
+
+function _flattenObject(input, parentKey) {
+  var _getFlatKey = function _getFlatKey(key) {
+    if (isArray(input)) {
+      return parentKey + "[" + key + "]";
+    }
+
+    if (parentKey) {
+      return parentKey + "." + key;
+    }
+
+    return key;
+  };
+
+  return Object.entries(input).reduce(function (output, _ref) {
+    var _mergeObjects;
+
+    var key = _ref[0],
+        value = _ref[1];
+
+    var flatKey = _getFlatKey(key);
+
+    if (_hasUnflattenedValues(value)) {
+      var flatValues = _flattenObject(value, flatKey);
+
+      return mergeObjects(output, flatValues);
+    }
+
+    return mergeObjects(output, (_mergeObjects = {}, _mergeObjects[flatKey] = value, _mergeObjects));
+  }, {});
+}
+
+function flattenObject(input) {
+  return _flattenObject(input, '');
+}
+
+function unflattenObject(object) {
+  return Object.entries(flattenObject(object)).reduce(function (objOut, _ref2) {
+    var key = _ref2[0],
+        value = _ref2[1];
+    return set(objOut, key, value);
+  }, {});
+}
+
+export { CENT_DECIMAL, DATE_FORMATS, EMPTY_FIELD, RE_ALPHA, RE_SMALL_WORDS, RE_WORDS, canReplaceSymbols, createDisabledContainer, createGuardedContainer, dateToday, flattenObject, formatAddress, formatAddressMultiline, formatCommaSeparatedNumber, formatDate, formatDateTime, formatDelimitedList, formatDollars, formatDuration, formatEmployerIdNumber, formatFullName, formatMoney, formatMoneyInput, formatNumberTemplates, formatParagraphs, formatPercentage, formatPhoneNumber, formatSocialSecurityNumber, formatWebsite, getDisplayName, getInitials, getNameOrDefault, getOrDefault, getPercentDisplay, getPercentValue, getType, hasStringContent, hasStringOrNumberContent, inferCentury, insertIf, isFutureDate, isValidDate, isValidPastDate, mapBooleanToText, parseAndPreserveNewlines, pluralize, preserveNewLines, replaceSymbolsWithChars, splitCommaList, splitName, stringToHTML, stripNonAlpha, toKey, unflattenObject, varToLabel };
 //# sourceMappingURL=utils.esm.js.map

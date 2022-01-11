@@ -1,10 +1,10 @@
-/// <reference types="react" />
+import React from 'react';
 import { IAddress } from './interfaces';
 export declare function canReplaceSymbols(template: string, chars: string[]): boolean;
 export declare function replaceSymbolsWithChars(template: string, chars: string[]): string;
 export declare function hasStringContent(value: unknown): value is string;
 export declare function hasStringOrNumberContent(value: unknown): value is number | string;
-export declare function splitName(name?: string | null): string[];
+export declare function splitName(name?: string | null): [string, string];
 export declare function splitCommaList(str?: string | null): string[];
 export declare function formatFullName(firstName?: string, lastName?: string): string;
 export declare function formatNumberTemplates(value: undefined | string | null, templates: string[]): string;
@@ -14,27 +14,27 @@ export declare function formatDateTime(value?: string | null): string;
 export declare function getNameOrDefault(obj?: unknown, { field, defaultValue }?: {
     field?: string;
     defaultValue?: string;
-}): any;
-export declare function getOrDefault(value?: unknown): unknown;
+}): string;
+export declare function getOrDefault(value?: unknown): string;
 export declare function formatSocialSecurityNumber(value?: null | string): string;
 export declare function formatEmployerIdNumber(value?: null | string): string;
 export declare function formatPercentage(value?: null | number | string, decimalPoints?: number): string;
 export declare function formatMoney(value?: null | number | string): string;
 export declare function formatDollars(value?: null | number | string): string;
-export declare function formatParagraphs(value?: null | string): "--" | JSX.Element[];
+export declare function formatParagraphs(value?: null | string): string | React.ReactNode[];
 export declare function formatCommaSeparatedNumber(value?: null | number | string): string;
-export declare function formatDelimitedList(list?: null | string[], delimiter?: string): unknown;
+export declare function formatDelimitedList(list?: null | string[], delimiter?: string): string;
 export declare function mapBooleanToText(bool?: boolean | null, { mapUndefinedToNo }?: {
     mapUndefinedToNo: boolean;
-}): "--" | "Yes" | "No";
+}): string;
 export declare function formatMoneyInput(value?: null | number | string): number;
 export declare function formatDuration(iso8601?: null | string): string;
-export declare function formatWebsite(website?: string | null, text?: string): string | JSX.Element;
+export declare function formatWebsite(website?: string | null, text?: string): React.ReactNode;
 export declare function stripNonAlpha(str?: string | null): string;
 export declare function pluralize(baseWord: string, pluralSuffix: string, count: number): string;
 export declare function getType(fullType?: null | string): string;
 export declare function preserveNewLines(body: string): string;
-export declare function parseAndPreserveNewlines(body?: string): any;
+export declare function parseAndPreserveNewlines(body?: string): React.ReactNode;
 export declare function getDisplayName(component: any): string | undefined;
 export declare const varToLabel: (str: string) => string;
 export declare function getInitials(value?: string | null): string;
@@ -42,5 +42,5 @@ export declare function toKey(dict: {
     [key: string]: any;
 }): string;
 export declare function formatAddress(address?: IAddress | null): string;
-export declare function formatAddressMultiline(address?: IAddress | null): any;
-export declare function stringToHTML(string: string): any;
+export declare function formatAddressMultiline(address?: IAddress | null): React.ReactNode;
+export declare function stringToHTML(string: string): React.ReactNode;
