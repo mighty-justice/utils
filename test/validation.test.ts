@@ -1,10 +1,8 @@
 import * as util from '../src';
 
 describe('validation', () => {
-  ['isValidDate', 'isValidPastDate'].forEach(utilKey => {
-    it(utilKey, () => {
-      const utilFn = (util as any)[utilKey];
-
+  it('Test isValidDate and isValidPastDate', () => {
+    [util.isValidDate, util.isValidPastDate].forEach(utilFn => {
       expect(utilFn('')).toBe(true);
       expect(utilFn('8')).toBe(false);
 
@@ -21,8 +19,9 @@ describe('validation', () => {
       expect(utilFn('0998-01-01')).toBe(true);
       expect(utilFn('1989-11-22')).toBe(true);
       expect(utilFn('1998-01-01')).toBe(true);
-
-      expect(utilFn('2040-01-01')).toBe(utilKey === 'isValidDate');
     });
+
+    expect(util.isValidDate('2060-01-01')).toBe(true);
+    expect(util.isValidPastDate('2060-01-01')).toBe(false);
   });
 });
