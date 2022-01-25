@@ -1,5 +1,5 @@
 import * as util from '../src';
-import { EMPTY_FIELD } from '../src';
+import { DATE_FORMATS, EMPTY_FIELD } from '../src';
 
 const EMPTY_VALUES = ['             ', ' ', '', null, undefined];
 
@@ -216,6 +216,8 @@ describe('formatting', () => {
 
   it('formatDate', () => {
     expect(util.formatDate('2016-10-03')).toBe('10/03/16');
+    expect(util.formatDate('2016-10-03', DATE_FORMATS.written_date)).toBe('October 3, 2016');
+    expect(util.formatDate('2016-10-03', DATE_FORMATS.written_date_abbreviated)).toBe('Oct 3, 2016');
   });
 
   it('formatDateTime', () => {
