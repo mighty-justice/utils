@@ -2,10 +2,18 @@ import Decimal from 'decimal.js';
 
 export const EMPTY_FIELD = '--';
 
-export const DATE_FORMATS: { date: string; date_at_time: string; date_value: string } = {
+export const DATE_FORMATS: {
+  date: string;
+  date_at_time: string;
+  date_value: string;
+  written_date: string;
+  written_date_abbreviated: string;
+} = {
   date: 'LL/dd/yy',
   date_at_time: 'LL/dd/yy @ h:mma', // ex. 07/14/16 @ 2:24PM
   date_value: 'yyyy-LL-dd',
+  written_date: 'MMMM d, yyyy',
+  written_date_abbreviated: 'MMM d, yyyy',
 };
 
 export const CENT_DECIMAL = new Decimal('100');
