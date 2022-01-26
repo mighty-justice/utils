@@ -23,7 +23,9 @@ var EMPTY_FIELD = '--';
 var DATE_FORMATS = {
   date: 'LL/dd/yy',
   date_at_time: 'LL/dd/yy @ h:mma',
-  date_value: 'yyyy-LL-dd'
+  date_value: 'yyyy-LL-dd',
+  written_date: 'MMMM d, yyyy',
+  written_date_abbreviated: 'MMM d, yyyy'
 };
 var CENT_DECIMAL = /*#__PURE__*/new Decimal('100');
 var RE_ALPHA = /[^A-Za-z]/g;
