@@ -91,7 +91,7 @@
     "date-fns": "^2.16.1",
     "decimal.js": "^10.1.1",
     "fast-memoize": "^2.5.2",
-    "html-react-parser": "1.2.6",
+    "html-react-parser": "1.4.10",
     "iso8601-duration": "^1.1.7",
     "moment": "^2.24.0",
     "numeral": "^2.0.6"
