@@ -4507,10 +4507,10 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
-iso8601-duration@^1.1.7:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/iso8601-duration/-/iso8601-duration-1.3.0.tgz#29d7b69e0574e4acdee50c5e5e09adab4137ba5a"
-  integrity sha512-K4CiUBzo3YeWk76FuET/dQPH03WE04R94feo5TSKQCXpoXQt9E4yx2CnY737QZnSAI3PI4WlKo/zfqizGx52QQ==
+iso8601-duration@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/iso8601-duration/-/iso8601-duration-2.0.0.tgz#1356a6aecc54bbbc8ccc642418d1e9254c6834cf"
+  integrity sha512-P8bxH8CW1IKcNAx76xN4YHuucQNdj1Y1FKzLmSsEdqJc0i1SFFjap+eNP0qUE5HBOLFdxdZL3TU3cp3H2jlQLw==
 
 isobject@^2.0.0:
   version "2.1.0"
